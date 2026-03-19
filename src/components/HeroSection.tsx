@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import heroImg from "@/assets/hero-repair.jpg";
+import heroImg from "@/assets/hero-tienda.png";
 
 const HeroSection = () => {
   const whatsappUrl =
