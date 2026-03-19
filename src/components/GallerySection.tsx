@@ -1,26 +1,14 @@
 import { motion } from "framer-motion";
+import galleryAltavoces from "@/assets/gallery-altavoces.png";
+import galleryMoviles from "@/assets/gallery-moviles.png";
+import galleryRelojes from "@/assets/gallery-relojes.png";
+import galleryCascos from "@/assets/gallery-cascos.png";
 
 const items = [
-  {
-    title: "Fundas iPhone exclusivas",
-    description: "Nuevos diseños de temporada",
-    placeholder: "Foto de fundas de iPhone exclusivas con diseños únicos",
-  },
-  {
-    title: "Reparación express",
-    description: "Pantallas en 30 minutos",
-    placeholder: "Técnico reparando una pantalla de móvil",
-  },
-  {
-    title: "Accesorios premium",
-    description: "AirPods, cargadores y más",
-    placeholder: "Exposición de accesorios de móvil premium",
-  },
-  {
-    title: "Protectores de cristal",
-    description: "Instalación gratuita",
-    placeholder: "Instalación de protector de pantalla de cristal templado",
-  },
+  { title: "Altavoces", image: galleryAltavoces },
+  { title: "Móviles", image: galleryMoviles },
+  { title: "Relojes inteligentes", image: galleryRelojes },
+  { title: "Cascos y auriculares", image: galleryCascos },
 ];
 
 const GallerySection = () => (
@@ -33,10 +21,10 @@ const GallerySection = () => (
         className="mb-14 text-center"
       >
         <span className="text-sm font-medium uppercase tracking-widest text-primary font-body">
-          Novedades
+          Productos
         </span>
         <h2 className="mt-3 text-3xl text-foreground md:text-4xl">
-          Lo último en la tienda
+          Nuestros Productos Destacados
         </h2>
       </motion.div>
 
@@ -50,17 +38,15 @@ const GallerySection = () => (
             transition={{ delay: i * 0.1 }}
             className="group overflow-hidden rounded-2xl border border-border bg-background"
           >
-            {/* Placeholder image area */}
-            <div className="flex aspect-square items-center justify-center bg-muted p-6 text-center">
-              <p className="text-sm text-muted-foreground font-body">
-                📷 {item.placeholder}
-              </p>
+            <div className="aspect-square overflow-hidden">
+              <img
+                src={item.image}
+                alt={item.title}
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
             </div>
-            <div className="p-5">
+            <div className="p-5 text-center">
               <h3 className="font-heading text-lg text-foreground">{item.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground font-body">
-                {item.description}
-              </p>
             </div>
           </motion.div>
         ))}
