@@ -52,7 +52,7 @@ const Footer = () => (
       </div>
 
       <div className="mt-10 border-t border-primary-foreground/10 pt-6 text-center text-xs text-primary-foreground/40 font-body">
-        © {new Date().getFullYear()} Urkulu Móviles. Todos los derechos reservados. · Made by{" "}
+        Made by{" "}
         <a
           href="https://www.instagram.com/jakesroodriguez/"
           target="_blank"
