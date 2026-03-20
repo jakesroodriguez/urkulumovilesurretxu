@@ -2,8 +2,8 @@ import { motion } from "framer-motion";
 import { MapPin, Clock, Phone } from "lucide-react";
 
 const hours = [
-  { day: "Lunes - Viernes", time: "10:00 - 13:30 / 16:30 - 20:00" },
-  { day: "Sábado", time: "10:00 - 13:30" },
+  { day: "Lunes - Viernes", time: "9:30 - 13:30 / 16:30 - 20:30" },
+  { day: "Sábado", time: "10:00 - 14:00 / 16:00 - 20:00" },
   { day: "Domingo", time: "Cerrado" },
 ];
 
@@ -14,8 +14,8 @@ const isOpenNow = () => {
   const m = now.getMinutes();
   const t = h * 60 + m;
   if (day === 0) return false;
-  if (day === 6) return t >= 600 && t <= 810;
-  return (t >= 600 && t <= 810) || (t >= 990 && t <= 1200);
+  if (day === 6) return (t >= 600 && t <= 840) || (t >= 960 && t <= 1200);
+  return (t >= 570 && t <= 810) || (t >= 990 && t <= 1230);
 };
 
 const LocationSection = () => {

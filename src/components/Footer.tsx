@@ -40,7 +40,7 @@ const Footer = () => (
             Síguenos
           </h4>
           <a
-            href="https://www.tiktok.com/@urkulumoviles"
+            href="https://www.tiktok.com/@urkulu.moviles2_urretxu"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm text-primary-foreground/60 transition-colors hover:text-primary-foreground font-body"
