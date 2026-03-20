@@ -2,8 +2,8 @@ import { motion } from "framer-motion";
 import { MapPin, Clock, Phone } from "lucide-react";
 
 const hours = [
-  { day: "Lunes - Viernes", time: "10:00 - 13:30 / 16:30 - 20:00" },
-  { day: "Sábado", time: "10:00 - 13:30" },
+  { day: "Lunes - Viernes", time: "9:30 - 13:30 / 16:30 - 20:30" },
+  { day: "Sábado", time: "10:00 - 14:00 / 16:00 - 20:00" },
   { day: "Domingo", time: "Cerrado" },
 ];
 
