@@ -14,8 +14,8 @@ const isOpenNow = () => {
   const m = now.getMinutes();
   const t = h * 60 + m;
   if (day === 0) return false;
-  if (day === 6) return t >= 600 && t <= 810;
-  return (t >= 600 && t <= 810) || (t >= 990 && t <= 1200);
+  if (day === 6) return (t >= 600 && t <= 840) || (t >= 960 && t <= 1200);
+  return (t >= 570 && t <= 810) || (t >= 990 && t <= 1230);
 };
 
 const LocationSection = () => {
