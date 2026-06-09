@@ -1,4 +1,4 @@
-import { Phone } from "lucide-react";
+import { Phone, MapPin, Code2 } from "lucide-react";
 
 const TikTokIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
@@ -7,43 +7,56 @@ const TikTokIcon = () => (
 );
 
 const Footer = () => (
-  <footer id="contactar" className="border-t border-border bg-foreground py-12">
-    <div className="container">
-      <div className="grid gap-8 md:grid-cols-3">
+  <footer
+    id="contactar"
+    className="relative overflow-hidden text-white"
+    style={{ background: "var(--gradient-ocean)" }}
+  >
+    {/* Decorative glow */}
+    <div className="pointer-events-none absolute -top-32 left-1/2 h-64 w-[600px] -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" />
+
+    <div className="container relative py-16 md:py-20">
+      <div className="grid gap-10 md:grid-cols-3">
         <div>
-          <h3 className="font-heading text-xl text-primary-foreground">
+          <h3 className="font-heading text-2xl tracking-tight">
             Urkulu Móviles
           </h3>
-          <p className="mt-2 text-sm text-primary-foreground/60 font-body">
+          <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/60 font-body">
             Tu tienda de reparación y accesorios de móviles en Urretxu, Gipuzkoa.
           </p>
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground/80 font-body">
+          <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/50 font-body">
             Contacto
           </h4>
-          <ul className="space-y-2 text-sm text-primary-foreground/60 font-body">
-            <li className="flex items-center gap-2">
-              <Phone size={14} />
-              <a href="tel:+34631946812" className="hover:text-primary-foreground">
+          <ul className="space-y-3 text-sm text-white/70 font-body">
+            <li className="flex items-center gap-3">
+              <Phone size={14} className="text-primary-glow" />
+              <a href="tel:+34631946812" className="hover:text-white transition-colors">
                 631 94 68 12
               </a>
             </li>
-            <li>Labeaga Kalea, 27, BAJO 003</li>
-            <li>20700 Urretxu, Gipuzkoa</li>
+            <li className="flex items-start gap-3">
+              <MapPin size={14} className="mt-1 text-primary-glow" />
+              <span>
+                Labeaga Kalea, 27, BAJO 003
+                <br />
+                20700 Urretxu, Gipuzkoa
+              </span>
+            </li>
           </ul>
         </div>
 
         <div>
-          <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary-foreground/80 font-body">
+          <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-white/50 font-body">
             Síguenos
           </h4>
           <a
             href="https://www.tiktok.com/@urkulu.moviles2_urretxu"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-primary-foreground/60 transition-colors hover:text-primary-foreground font-body"
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/70 backdrop-blur-md transition-all hover:border-white/30 hover:bg-white/10 hover:text-white font-body"
           >
             <TikTokIcon />
             TikTok
@@ -51,15 +64,28 @@ const Footer = () => (
         </div>
       </div>
 
-      <div className="mt-10 border-t border-primary-foreground/10 pt-6 text-center text-xs text-primary-foreground/40 font-body">
-        Made by{" "}
+      {/* Author button */}
+      <div className="mt-14 flex justify-center border-t border-white/10 pt-8">
         <a
-          href="https://www.instagram.com/jakesroodriguez/"
+          href="https://www.instagram.com/jakesroodriguez"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-primary-foreground/60 hover:text-primary-foreground transition-colors"
+          className="group inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-zinc-400 backdrop-blur-md transition-all duration-500 hover:bg-white/10 hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95"
         >
-          @jakesroodriguez
+          <div className="flex items-center justify-center rounded-full bg-white/10 p-2 transition-colors group-hover:bg-white/20">
+            <Code2
+              size={14}
+              className="transition-all duration-300 group-hover:rotate-[15deg] group-hover:scale-110"
+            />
+          </div>
+          <div className="flex flex-col items-start text-left font-body">
+            <span className="mb-0.5 text-[9px] font-medium uppercase tracking-[0.2em] opacity-60">
+              Designed & Built by
+            </span>
+            <span className="text-sm font-bold tracking-wider">
+              @jakesroodriguez
+            </span>
+          </div>
         </a>
       </div>
     </div>
