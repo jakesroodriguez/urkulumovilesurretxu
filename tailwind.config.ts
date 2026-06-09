@@ -59,8 +59,13 @@ export default {
           DEFAULT: "hsl(var(--wood))",
           light: "hsl(var(--wood-light))",
         },
-        "slate-warm": "hsl(var(--slate-warm))",
-        "teal-glow": "hsl(var(--teal-glow))",
+        ocean: {
+          deep: "hsl(var(--ocean-deep))",
+          mid: "hsl(var(--ocean-mid))",
+          teal: "hsl(var(--ocean-teal))",
+          glow: "hsl(var(--ocean-glow))",
+        },
+        "primary-glow": "hsl(var(--primary-glow))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

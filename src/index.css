@@ -6,45 +6,58 @@
 
 @layer base {
   :root {
-    --background: 40 20% 98%;
-    --foreground: 210 11% 15%;
+    /* Ocean Deep palette */
+    --background: 40 25% 98%;
+    --foreground: 213 65% 15%;
 
-    --card: 40 15% 96%;
-    --card-foreground: 210 11% 15%;
+    --card: 40 20% 96%;
+    --card-foreground: 213 65% 15%;
 
-    --popover: 40 20% 98%;
-    --popover-foreground: 210 11% 15%;
+    --popover: 40 25% 98%;
+    --popover-foreground: 213 65% 15%;
 
-    --primary: 174 62% 38%;
+    /* Teal primary CTA */
+    --primary: 190 56% 40%;
     --primary-foreground: 0 0% 100%;
+    --primary-glow: 177 41% 55%;
 
-    --secondary: 40 15% 93%;
-    --secondary-foreground: 210 11% 15%;
+    --secondary: 210 30% 94%;
+    --secondary-foreground: 213 65% 15%;
 
-    --muted: 40 10% 94%;
-    --muted-foreground: 210 7% 46%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 213 15% 42%;
 
-    --accent: 28 30% 85%;
-    --accent-foreground: 210 11% 15%;
+    --accent: 177 41% 92%;
+    --accent-foreground: 213 65% 15%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 40 12% 89%;
-    --input: 40 12% 89%;
-    --ring: 174 62% 38%;
+    --border: 210 18% 88%;
+    --input: 210 18% 88%;
+    --ring: 190 56% 40%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    --forest: 152 28% 32%;
-    --forest-foreground: 0 0% 100%;
-    --slate-warm: 210 7% 46%;
-    --wood: 28 30% 50%;
-    --wood-light: 28 30% 85%;
-    --teal-glow: 174 62% 48%;
+    /* Ocean deep tones */
+    --ocean-deep: 213 65% 15%;
+    --ocean-mid: 207 60% 27%;
+    --ocean-teal: 190 56% 40%;
+    --ocean-glow: 177 41% 55%;
 
-    --font-heading: 'DM Serif Display', serif;
-    --font-body: 'DM Sans', sans-serif;
+    /* Gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(213 65% 12%), hsl(207 60% 22%));
+    --gradient-hero-overlay: linear-gradient(180deg, hsl(213 65% 12% / 0.55) 0%, hsl(213 65% 10% / 0.35) 40%, hsl(213 65% 8% / 0.85) 100%);
+    --gradient-teal: linear-gradient(135deg, hsl(190 56% 40%), hsl(177 41% 55%));
+    --gradient-text: linear-gradient(135deg, hsl(0 0% 100%), hsl(177 41% 85%));
+
+    /* Shadows */
+    --shadow-elegant: 0 25px 50px -12px hsl(213 65% 15% / 0.25);
+    --shadow-glow: 0 0 40px hsl(190 56% 40% / 0.35);
+    --shadow-soft: 0 8px 30px -10px hsl(213 65% 15% / 0.12);
+
+    /* Transitions */
+    --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -61,19 +74,44 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground font-body antialiased;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+    font-family: var(--font-heading, 'DM Serif Display', serif);
+    letter-spacing: -0.01em;
   }
 }
 
 @layer utilities {
   .font-heading {
-    font-family: var(--font-heading);
+    font-family: 'DM Serif Display', serif;
   }
   .font-body {
-    font-family: var(--font-body);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .gradient-ocean {
+    background: var(--gradient-ocean);
+  }
+  .gradient-teal {
+    background: var(--gradient-teal);
+  }
+  .shadow-elegant {
+    box-shadow: var(--shadow-elegant);
+  }
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  .text-gradient {
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 }

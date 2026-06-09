@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 const testimonials = [
   {
@@ -31,7 +31,7 @@ const TestimonialsSection = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((c) => (c + 1) % testimonials.length);
-    }, 5000);
+    }, 5500);
     return () => clearInterval(interval);
   }, []);
 
@@ -39,13 +39,13 @@ const TestimonialsSection = () => {
   const next = () => setCurrent((c) => (c + 1) % testimonials.length);
 
   return (
-    <section id="opiniones" className="py-20 md:py-28">
+    <section id="opiniones" className="py-24 md:py-32">
       <div className="container max-w-3xl text-center">
-        <span className="text-sm font-medium uppercase tracking-widest text-primary font-body">
+        <span className="text-xs font-medium uppercase tracking-[0.25em] text-primary font-body">
           Opiniones · 5.0 ★
         </span>
-        <h2 className="mt-3 mb-12 text-3xl text-foreground md:text-4xl">
-          Lo que dicen nuestros clientes
+        <h2 className="mb-14 mt-4 text-4xl text-foreground md:text-5xl">
+          Lo que dicen <span className="italic">nuestros clientes</span>
         </h2>
 
         <div className="relative">
@@ -55,27 +55,34 @@ const TestimonialsSection = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.4 }}
-              className="rounded-2xl border border-border bg-card p-8 md:p-12"
+              transition={{ duration: 0.45 }}
+              className="relative overflow-hidden rounded-3xl border border-border bg-card p-10 shadow-soft md:p-14"
             >
-              <div className="mb-4 flex justify-center gap-1">
-                {Array.from({ length: testimonials[current].rating }).map((_, i) => (
-                  <Star key={i} size={20} className="fill-primary text-primary" />
-                ))}
+              <Quote
+                size={120}
+                className="pointer-events-none absolute -left-4 -top-4 text-primary/5"
+                strokeWidth={1}
+              />
+              <div className="relative">
+                <div className="mb-5 flex justify-center gap-1">
+                  {Array.from({ length: testimonials[current].rating }).map((_, i) => (
+                    <Star key={i} size={18} className="fill-primary text-primary" />
+                  ))}
+                </div>
+                <blockquote className="mb-7 font-heading text-2xl leading-relaxed text-foreground md:text-3xl">
+                  "{testimonials[current].text}"
+                </blockquote>
+                <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground font-body">
+                  — {testimonials[current].name}
+                </p>
               </div>
-              <blockquote className="mb-6 text-xl leading-relaxed text-foreground md:text-2xl">
-                "{testimonials[current].text}"
-              </blockquote>
-              <p className="font-medium text-muted-foreground font-body">
-                — {testimonials[current].name}
-              </p>
             </motion.div>
           </AnimatePresence>
 
-          <div className="mt-6 flex items-center justify-center gap-4">
+          <div className="mt-8 flex items-center justify-center gap-4">
             <button
               onClick={prev}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-all hover:border-primary hover:text-primary"
               aria-label="Anterior"
             >
               <ChevronLeft size={18} />
@@ -86,7 +93,7 @@ const TestimonialsSection = () => {
                   key={i}
                   onClick={() => setCurrent(i)}
                   className={`h-2 rounded-full transition-all ${
-                    i === current ? "w-6 bg-primary" : "w-2 bg-border"
+                    i === current ? "w-8 bg-primary" : "w-2 bg-border"
                   }`}
                   aria-label={`Testimonio ${i + 1}`}
                 />
@@ -94,7 +101,7 @@ const TestimonialsSection = () => {
             </div>
             <button
               onClick={next}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-all hover:border-primary hover:text-primary"
               aria-label="Siguiente"
             >
               <ChevronRight size={18} />
