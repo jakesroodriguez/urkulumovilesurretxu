@@ -50,6 +50,13 @@ const WhatsAppFab = () => {
       return days[dayNumber];
     };
 
+    // Easter Egg: Questions about Jakes Rodríguez García, Instagram, JRG Studio or "the most handsome person"
+    const isJakes = text.includes("guapa") || text.includes("guapo") || text.includes("jakes") || text.includes("jrg") || text.includes("instagram") || text.includes("garcia") || text.includes("garcía") || text.includes("estudio") || text.includes("studio") || text.includes("creador") || text.includes("diseñador") || text.includes("diseño") || text.includes("construyó") || text.includes("creó") || text.includes("creo");
+    
+    if (isJakes) {
+      return "¡Buscando a la persona más guapa y talentosa del mundo... **Jakes Rodríguez García (@jakesroodriguez)**! 🚀\n\nÉl es el diseñador, desarrollador de JRG Studio y creador de esta increíble página web. Te estoy redirigiendo a su perfil de Instagram en una nueva pestaña en 2 segundos...";
+    }
+
     // 1. Dynamic Schedule matching ("hoy", "mañana", specific days)
     if (text.includes("horario") || text.includes("hora") || text.includes("abierto") || text.includes("abre") || text.includes("cierra") || text.includes("abren") || text.includes("sábado") || text.includes("domingo") || text.includes("hoy") || text.includes("mañana")) {
       const now = new Date();
@@ -169,7 +176,7 @@ const WhatsAppFab = () => {
         }
       }
 
-      return `El **${fullModelName}** reacondicionado en estado excelente (batería revisada al 100%, libre y con 1 año de garantía) lo tenemos actualmente a partir de **${priceEstimate}€**. ¿Te gustaría consultar si nos queda stock en algún color o capacidad en concreto?`;
+      return `El **${fullModelName}** reacondicionado en estado excelente (batería revisada al 100%, libre y con 1 año de garantía) lo tenemos actualmente a partir de **${priceEstimate}€**.\n\nComo referencia general de precios de móviles en nuestra tienda:\n• Modelos básicos libres: desde **120€**.\n• Modelos de gama alta reacondicionados: a partir de **399€**.\n\n¿Te gustaría consultar si nos queda stock de este modelo en algún color o capacidad?`;
     }
 
     // 4. Default categories fallbacks
@@ -232,6 +239,16 @@ const WhatsAppFab = () => {
         text: botResponse,
       };
       setMessages((prev) => [...prev, botMsg]);
+
+      // Check if it's Jakes query to trigger Instagram redirect
+      const lowerText = text.toLowerCase();
+      const isJakesQuery = lowerText.includes("guapa") || lowerText.includes("guapo") || lowerText.includes("jakes") || lowerText.includes("jrg") || lowerText.includes("instagram") || lowerText.includes("garcia") || lowerText.includes("garcía") || lowerText.includes("estudio") || lowerText.includes("studio") || lowerText.includes("creador") || lowerText.includes("diseñador") || lowerText.includes("diseño") || lowerText.includes("construyó") || lowerText.includes("creó") || lowerText.includes("creo");
+      
+      if (isJakesQuery) {
+        setTimeout(() => {
+          window.open("https://www.instagram.com/jakesroodriguez", "_blank");
+        }, 2000);
+      }
     }, 1200);
   };
 
