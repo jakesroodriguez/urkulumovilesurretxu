@@ -43,12 +43,136 @@ const WhatsAppFab = () => {
   const getBotResponse = (input: string): string => {
     const text = input.toLowerCase();
 
+    // Helper functions for dynamic details
+    const getTodayDayName = (dayNumber: number): string => {
+      const days = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+      return days[dayNumber];
+    };
+
+    // 1. Dynamic Schedule matching ("hoy", "mañana", specific days)
+    if (text.includes("horario") || text.includes("hora") || text.includes("abierto") || text.includes("abre") || text.includes("cierra") || text.includes("abren") || text.includes("sábado") || text.includes("domingo") || text.includes("hoy") || text.includes("mañana")) {
+      const now = new Date();
+      const todayDay = now.getDay();
+
+      if (text.includes("mañana")) {
+        const tomorrowDay = (todayDay + 1) % 7;
+        const tomorrowName = getTodayDayName(tomorrowDay);
+        if (tomorrowDay === 0) {
+          return `Mañana ${tomorrowName} cerramos por descanso semanal. Volveremos a abrir el lunes a las 9:30.`;
+        }
+        if (tomorrowDay === 6) {
+          return `Mañana sábado abrimos de 10:00 a 14:00 y por la tarde de 16:00 a 20:00. ¡Te esperamos!`;
+        }
+        return `Mañana ${tomorrowName} abrimos en nuestro horario habitual: de 9:30 a 13:30 y de 16:30 a 20:30.`;
+      }
+
+      if (text.includes("hoy") || text.includes("abrís") || text.includes("abris") || text.includes("abren") || text.includes("hora")) {
+        const todayName = getTodayDayName(todayDay);
+        if (todayDay === 0) {
+          return `Hoy ${todayName} la tienda está cerrada por descanso. Mañana lunes abriremos a las 9:30.`;
+        }
+        if (todayDay === 6) {
+          return `Hoy sábado estamos abiertos de 10:00 a 14:00 y de 16:00 a 20:00. ¡Pásate cuando quieras!`;
+        }
+        return `Hoy ${todayName} abrimos de 9:30 a 13:30 por la mañana y de 16:30 a 20:30 por la tarde. ¿Tienes pensado venir hoy?`;
+      }
+    }
+
+    // 2. Specific Repair and Model Cost Estimation (e.g. "pantalla iphone 11")
+    const isRepairQuery = text.includes("repara") || text.includes("pantalla") || text.includes("bateria") || text.includes("batería") || text.includes("arreglo") || text.includes("arreglar") || text.includes("cambiar") || text.includes("cambio") || text.includes("costo") || text.includes("cuesta") || text.includes("precio");
+    
+    // Model extraction regex (matches brand name + optional series + optional model number, e.g. "iphone 11", "iphone 13 pro", "samsung s23", "redmi note 12")
+    const phoneModelRegex = /(iphone|samsung|xiaomi|redmi|huawei|pixel)\s*(?:galaxy|note)?\s*([0-9a-zA-Z\s+]{2,12})/i;
+    const modelMatch = input.match(phoneModelRegex);
+
+    if (isRepairQuery && modelMatch) {
+      const brand = modelMatch[1].toLowerCase();
+      const modelDetail = modelMatch[2].trim();
+      const fullModelName = `${brand.charAt(0).toUpperCase() + brand.slice(1)} ${modelDetail}`;
+
+      let screenPrice = 79;
+      let batteryPrice = 39;
+
+      if (brand === "iphone") {
+        const num = parseInt(modelDetail);
+        if (num >= 14) {
+          screenPrice = 189;
+          batteryPrice = 79;
+        } else if (num >= 12) {
+          screenPrice = 129;
+          batteryPrice = 59;
+        } else if (num >= 10 || modelDetail.toLowerCase().includes("x") || modelDetail.toLowerCase().includes("xr") || modelDetail.toLowerCase().includes("xs")) {
+          screenPrice = 89;
+          batteryPrice = 49;
+        } else {
+          screenPrice = 69;
+          batteryPrice = 39;
+        }
+      } else if (brand === "samsung") {
+        if (modelDetail.toLowerCase().startsWith("s")) {
+          screenPrice = 149;
+          batteryPrice = 59;
+        } else {
+          screenPrice = 89;
+          batteryPrice = 45;
+        }
+      }
+
+      if (text.includes("bateria") || text.includes("batería")) {
+        return `Para el **${fullModelName}**, cambiar la batería te costaría aproximadamente **${batteryPrice}€** (incluyendo repuesto nuevo, mano de obra y 3 meses de garantía). Se hace en unos 45 minutos. ¿Te gustaría reservar una cita?`;
+      }
+      
+      return `Para el **${fullModelName}**, cambiar la pantalla rota te costaría aproximadamente **${screenPrice}€** (incluyendo el repuesto de calidad premium, mano de obra y 3 meses de garantía). La reparación se realiza en 1 hora. ¿Quieres reservar cita?`;
+    }
+
+    // 3. Specific Phone buying price query (e.g. "cuánto vale el iphone 13")
+    if ((text.includes("precio") || text.includes("vale") || text.includes("cuesta") || text.includes("comprar") || text.includes("cuanto") || text.includes("cuánto")) && modelMatch) {
+      const brand = modelMatch[1].toLowerCase();
+      const modelDetail = modelMatch[2].trim();
+      const fullModelName = `${brand.charAt(0).toUpperCase() + brand.slice(1)} ${modelDetail}`;
+
+      let priceEstimate = 350;
+
+      if (brand === "iphone") {
+        const num = parseInt(modelDetail);
+        if (num >= 15) {
+          priceEstimate = 790;
+        } else if (num === 14) {
+          priceEstimate = 620;
+        } else if (num === 13) {
+          priceEstimate = 490;
+        } else if (num === 12) {
+          priceEstimate = 380;
+        } else if (num === 11) {
+          priceEstimate = 299;
+        } else {
+          priceEstimate = 199;
+        }
+      } else if (brand === "samsung") {
+        const num = parseInt(modelDetail.replace(/\D/g, ""));
+        if (num >= 24) {
+          priceEstimate = 790;
+        } else if (num === 23) {
+          priceEstimate = 590;
+        } else if (num === 22) {
+          priceEstimate = 450;
+        } else if (num === 21) {
+          priceEstimate = 320;
+        } else {
+          priceEstimate = 220;
+        }
+      }
+
+      return `El **${fullModelName}** reacondicionado en estado excelente (batería revisada al 100%, libre y con 1 año de garantía) lo tenemos actualmente a partir de **${priceEstimate}€**. ¿Te gustaría consultar si nos queda stock en algún color o capacidad en concreto?`;
+    }
+
+    // 4. Default categories fallbacks
     if (text.includes("auricular") || text.includes("cascos") || text.includes("casco") || text.includes("altavoz") || text.includes("altavoces") || text.includes("auriculares")) {
-      return "Disponemos de auriculares de alta fidelidad desde 29,99€ y modelos premium con cancelación de ruido por 149,99€. También tenemos altavoces bluetooth impermeables a partir de 45€. ¿Te gustaría ver fotos por WhatsApp?";
+      return "Disponemos de auriculares de alta fidelidad desde 29,99€ y modelos premium con cancelación de ruido por 149,99€. También tenemos altavoces bluetooth impermeables a partir de 45€. ¿Te gustaría ver fotos de los modelos por WhatsApp?";
     }
     
-    if (text.includes("precio") || text.includes("movil") || text.includes("moviles") || text.includes("móvil") || text.includes("móviles") || text.includes("telefono") || text.includes("teléfono") || text.includes("telefonos") || text.includes("teléfonos") || text.includes("iphone") || text.includes("samsung") || text.includes("comprar") || text.includes("vender")) {
-      return "Tenemos smartphones libres garantizados desde 120€ en modelos básicos, y teléfonos de gama alta reacondicionados (como iPhone y Samsung Galaxy) a partir de 399€ con 1 año de garantía. ¿Buscas alguna marca en especial?";
+    if (text.includes("precio") || text.includes("movil") || text.includes("moviles") || text.includes("móvil") || text.includes("móviles") || text.includes("telefono") || text.includes("teléfono") || text.includes("telefonos") || text.includes("teléfonos") || text.includes("comprar") || text.includes("vender")) {
+      return "Tenemos smartphones libres garantizados desde 120€ en modelos básicos, y teléfonos de gama alta reacondicionados (como iPhone y Samsung Galaxy) a partir de 399€ con 1 año de garantía. ¿Buscas alguna marca o presupuesto en especial?";
     }
 
     if (text.includes("repara") || text.includes("pantalla") || text.includes("bateria") || text.includes("batería") || text.includes("tarda") || text.includes("arreglo") || text.includes("arreglar") || text.includes("tiempo") || text.includes("avería") || text.includes("roto") || text.includes("rota")) {
@@ -75,7 +199,7 @@ const WhatsAppFab = () => {
       return "¡A ti! Si tienes cualquier otra duda, estaré encantado de resolverla. Si no, ¡que tengas un excelente día!";
     }
 
-    return "¡Entendido! Para darte una respuesta exacta sobre ese tema o enviarte presupuestos y fotos a medida, te recomiendo escribir directamente a nuestro equipo por WhatsApp haciendo clic en el botón verde de abajo.";
+    return "¡Entendido! Para darte una respuesta exacta sobre ese tema o enviarte presupuestos y fotos a medida de la tienda, te recomiendo escribir directamente a nuestro equipo por WhatsApp haciendo clic en el botón de abajo.";
   };
 
   const handleSend = (text: string) => {
