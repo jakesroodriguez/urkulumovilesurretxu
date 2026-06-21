@@ -5,22 +5,22 @@ import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 const testimonials = [
   {
     name: "Amaia L.",
-    text: "La mejor tienda de móviles de Urretxu. Reparación rápida y a buen precio.",
+    text: "Sin duda, el mejor servicio técnico de toda la zona. Tenía la pantalla de mi iPhone rota, me la cambiaron en apenas 45 minutos y el resultado es impecable. Un trato de diez.",
     rating: 5,
   },
   {
     name: "Mikel G.",
-    text: "Excelente servicio y personal muy amable. Me repararon la pantalla en el mismo día.",
+    text: "Trato supercercano y profesional. Les llevé un móvil que no cargaba y lo solucionaron en el mismo día con total transparencia en el precio. Muy recomendables.",
     rating: 5,
   },
   {
     name: "Itziar S.",
-    text: "Tienen fundas de iPhone preciosas que no encuentras en ningún otro sitio. ¡Totalmente recomendable!",
+    text: "Tienen una selección de fundas preciosa y de una calidad brutal que no se encuentra en ningún otro lado. Además, me colocaron un protector de hidrogel a medida en cinco minutos.",
     rating: 5,
   },
   {
     name: "Jon A.",
-    text: "Muy profesionales. Me cambiaron la batería y el móvil funciona como nuevo. Volveré seguro.",
+    text: "Atención al cliente excepcional. Cambié la batería de mi dispositivo y vuelve a rendir como el primer día. Explicaciones claras, rapidez y máxima confianza.",
     rating: 5,
   },
 ];

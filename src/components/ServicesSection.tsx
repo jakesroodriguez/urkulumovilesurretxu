@@ -4,21 +4,21 @@ import { Smartphone, ShieldCheck, Headphones } from "lucide-react";
 const services = [
   {
     icon: Smartphone,
-    title: "Reparación de Pantallas y Baterías",
+    title: "Soporte Técnico Express",
     description:
-      "Reparamos tu móvil con piezas de alta calidad. Servicio rápido y garantizado para todas las marcas.",
+      "Recupera el rendimiento de tu móvil. Cambiamos tu pantalla rota o batería gastada en menos de 1 hora, utilizando componentes de máxima calidad con garantía certificada.",
   },
   {
     icon: ShieldCheck,
-    title: "Fundas Especiales",
+    title: "Fundas de Autor y Estilo",
     description:
-      "Amplio catálogo de fundas exclusivas para iPhone y Android. Protección y estilo para tu dispositivo.",
+      "Viste tu dispositivo con personalidad y protección. Descubre nuestra cuidada selección de fundas exclusivas diseñadas para absorber impactos sin comprometer la estética.",
   },
   {
     icon: Headphones,
-    title: "Accesorios y Gadgets",
+    title: "Accesorios y Gadgets Premium",
     description:
-      "Cargadores, auriculares, protectores de pantalla y mucho más. Todo lo que necesitas en un solo lugar.",
+      "Equípate con accesorios de alta fidelidad. Desde protectores de hidrogel cortados a medida hasta cargadores inteligentes ultra-rápidos y auriculares de sonido envolvente.",
   },
 ];
 

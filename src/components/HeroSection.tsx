@@ -50,21 +50,20 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.15 }}
-          className="font-heading text-5xl leading-[1.05] tracking-tight md:text-7xl lg:text-[5.5rem]"
+          className="font-heading text-5xl leading-[1.05] tracking-tight md:text-7xl lg:text-[5.5rem] font-bold"
         >
-          Expertos en reparación
+          Servicio técnico experto
           <br />
-          <span className="italic text-gradient">de móviles</span>
+          <span className="italic text-gradient">& accesorios premium</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-7 max-w-xl text-base text-white/75 md:text-lg font-body"
+          className="mt-7 max-w-2xl text-base text-white/80 md:text-lg leading-relaxed font-body"
         >
-          Fundas exclusivas, accesorios premium y servicio técnico profesional
-          en el corazón de Urretxu.
+          Reparaciones express de pantallas y baterías en tiempo récord con componentes de calidad certificada. Descubre nuestra colección de fundas exclusivas y accesorios de alta gama en el centro de Urretxu.
         </motion.p>
 
         {/* CTAs */}
