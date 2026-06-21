@@ -50,8 +50,19 @@ const Footer = () => {
     },
   ];
 
+  const payments = [
+    { id: "bizum", name: "📱 Bizum", desc: "Pago instantáneo y seguro a través de Bizum al número de la tienda." },
+    { id: "tarjeta", name: "💳 Tarjeta", desc: "Aceptamos todas las tarjetas de débito/crédito, Apple Pay y Google Pay." },
+    { id: "efectivo", name: "💵 Efectivo", desc: "Puedes realizar tu pago en metálico directamente en nuestro local comercial." },
+  ];
+
   const [activeRepair, setActiveRepair] = useState(repairOptions[0]);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  
+  const [rating, setRating] = useState<number | null>(null);
+  const [hoverRating, setHoverRating] = useState<number | null>(null);
+  const [submittedRating, setSubmittedRating] = useState(false);
+  const [selectedPay, setSelectedPay] = useState<string | null>(null);
 
   const isOpenNow = () => {
     const now = new Date();
@@ -128,7 +139,7 @@ const Footer = () => {
 
       <div className="container relative z-10 py-16 md:py-24">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Column 1: Brand Info & Live Status */}
+          {/* Column 1: Brand Info, Live Status & Rating */}
           <div className="flex flex-col items-start">
             <h3 className="font-heading text-3xl tracking-tight text-white">
               Urkulu <span className="italic text-primary-glow">Móviles</span>
@@ -151,10 +162,60 @@ const Footer = () => {
               </span>
             </div>
             
-            <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-3.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary-glow font-body">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary-glow animate-pulse" />
-              Soporte Profesional
-            </span>
+            {/* Interactive Rating Component */}
+            <div className="mt-6 rounded-2xl border border-white/5 bg-white/5 p-3.5 backdrop-blur-md w-full">
+              {!submittedRating ? (
+                <>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/40 block mb-2 font-body">
+                    ¿Nos has visitado? Valóranos
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(null)}
+                        onClick={() => {
+                          setRating(star);
+                          setSubmittedRating(true);
+                        }}
+                        className="text-lg transition-transform duration-200 hover:scale-125 focus:outline-none"
+                      >
+                        <span
+                          className={`${
+                            star <= (hoverRating ?? rating ?? 0)
+                              ? "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+                              : "text-white/20"
+                          }`}
+                        >
+                          ★
+                        </span>
+                      </button>
+                    ))}
+                    {rating && <span className="text-xs text-white/50 ml-2 font-body">{rating}/5</span>}
+                  </div>
+                </>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-1"
+                >
+                  <p className="text-xs text-white/80 font-semibold font-body mb-2">
+                    ¡Gracias por tu valoración! ❤️
+                  </p>
+                  <a
+                    href="https://search.google.com/local/writereview?placeid=ChIJK3Zq8mO-SQ0R4qM1WbVw_w8"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-lg bg-white/10 px-2.5 py-1 text-[10px] font-bold text-white transition-all hover:bg-white/15 hover:scale-103 font-body border border-white/5"
+                  >
+                    <span>Dejar reseña en Google</span>
+                    <ArrowUpRight size={10} className="text-primary-glow" />
+                  </a>
+                </motion.div>
+              )}
+            </div>
           </div>
 
           {/* Column 2: Navigation Links & Social */}
@@ -315,6 +376,41 @@ const Footer = () => {
               </a>
             </div>
           </motion.div>
+        </div>
+
+        {/* Interactive Payment Methods Selector */}
+        <div className="mt-12 flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-black/20 p-5 text-center backdrop-blur-md">
+          <div className="flex flex-wrap justify-center items-center gap-3 text-xs text-white/60 font-body">
+            <span className="self-center mr-1 font-semibold text-white/80">Métodos de pago aceptados:</span>
+            {payments.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setSelectedPay(selectedPay === p.id ? null : p.id)}
+                className={`px-4.5 py-2 rounded-2xl border text-xs font-semibold transition-all duration-300 font-body ${
+                  selectedPay === p.id
+                    ? "bg-primary-glow/20 border-primary-glow text-white shadow-[0_0_15px_rgba(var(--primary-glow),0.1)] scale-105"
+                    : "bg-white/5 border-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                {p.name}
+              </button>
+            ))}
+          </div>
+          <AnimatePresence initial={false}>
+            {selectedPay && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <p className="text-xs text-primary-glow font-medium font-body max-w-md mt-1">
+                  {payments.find((p) => p.id === selectedPay)?.desc}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Bottom Bar: Copyright & Designer */}
