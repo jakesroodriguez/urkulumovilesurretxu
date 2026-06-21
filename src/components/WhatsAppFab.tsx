@@ -57,6 +57,34 @@ const WhatsAppFab = () => {
       return "¡Buscando a la persona más guapa y talentosa del mundo... **Jakes Rodríguez García (@jakesroodriguez)**! 🚀\n\nÉl es el diseñador, desarrollador de JRG Studio y creador de esta increíble página web. Te estoy redirigiendo a su perfil de Instagram en una nueva pestaña en 2 segundos...";
     }
 
+    // Basque Country (Euskera) language detection and responses
+    const isEuskera = text.match(/(kaixo|egun on|arratsalde on|ordutegia|ordutegi|ireki|itxi|non dago|non zaudete|pantaila|bateria|osagarriak|konponketa|konpondu|prezioa|zenbat balio|gora euskadi|gora eta|gora ta|eskerrik asko|agur|maite|polita)/i);
+    
+    if (isEuskera) {
+      if (text.includes("gora euskadi") || text.includes("gora eta") || text.includes("gora ta")) {
+        return "Gora Euskadi! 🔴💚⚪ Urkulu Móviles Euskal Herriko eta Gipuzkoako telefono denda eta konponketa zentro onena da. Zer konpondu nahi duzu gaur?";
+      }
+      if (text.includes("ordutegi") || text.includes("ordutegia") || text.includes("ireki") || text.includes("itxi") || text.includes("ordu")) {
+        return "Gure ordutegia:\n• Astelehenetik ostiralera: 9:30 - 13:30 eta 16:30 - 20:30\n• Larunbatetan: 10:00 - 14:00 eta 16:00 - 20:00\n• Igandeetan: Itxita gaude atsedenagatik.";
+      }
+      if (text.includes("pantaila") || text.includes("bateria") || text.includes("konpondu") || text.includes("konponketa") || text.includes("arregla")) {
+        return "Pantailak ordubetean aldatzen ditugu eta bateriak 45 minututan, kalitate ziurtatuko ordezko piezekin eta 3 hilabeteko bermearekin. Esadazu zein mugikor modelo duzun eta prezioa esango dizut.";
+      }
+      if (text.includes("non") || text.includes("helbidea") || text.includes("tienda") || text.includes("denda") || text.includes("urretxu")) {
+        return "Urretxuko erdigunean gaude, Labeaga Kalea 27an (Gipuzkoa). Goian daukazu Google Maps mapa interaktiboa gure denda erraz aurkitzeko!";
+      }
+      if (text.includes("prezio") || text.includes("prezioa") || text.includes("balio") || text.includes("osagarri") || text.includes("osagarriak")) {
+        return "Mugikor libreak ditugu 120€-tik aurrera eta gama altuko berregokituak (iPhone, Samsung) 399€-tik aurrera urtebeteko bermearekin. Zure mugikorra babesteko fundak eta kristalak ere baditugu.";
+      }
+      if (text.includes("eskerrik") || text.includes("eskerrik asko") || text.includes("agur") || text.includes("ondo") || text.includes("bale")) {
+        return "Eskerrik asko zuri! Edozein zalantza baduzu, idatzi lasai. Egun bikaina izan! 😊";
+      }
+      if (text.includes("kaixo") || text.includes("egun on") || text.includes("arratsalde on")) {
+        return "Kaixo! 👋 Urkulu Móviles laguntzaile adimentsua naiz.\n\nGalde diezadakezu nahi duzuna:\n• 🔧 Pantaila eta bateria konponketak\n• 📱 Mugikorren prezioak eta stocka\n• ⏱️ Denda non dagoen eta ordutegia";
+      }
+      return "Eskerrik asko idazteagatik! Informazio zehatzagoa jasotzeko edo gure taldearekin zuzenean hitz egiteko, egin klik beheko botoian WhatsApp bidez idazteko.";
+    }
+
     // 1. Dynamic Schedule matching ("hoy", "mañana", specific days)
     if (text.includes("horario") || text.includes("hora") || text.includes("abierto") || text.includes("abre") || text.includes("cierra") || text.includes("abren") || text.includes("sábado") || text.includes("domingo") || text.includes("hoy") || text.includes("mañana")) {
       const now = new Date();

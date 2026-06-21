@@ -103,6 +103,16 @@ const LocationSection = () => {
                 ))}
               </ul>
             </InfoRow>
+
+            {/* SEO Service Area Box */}
+            <div className="mt-4 rounded-2xl border border-border bg-card/45 p-5 backdrop-blur-sm shadow-elegant">
+              <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-primary font-body">
+                Área de Servicio · Zerbitzu Eremua
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-body">
+                Ofrecemos soporte técnico express en toda la comarca de <strong>Urola Garaia</strong> (Urretxu, Zumarraga, Legazpi). También atendemos consultas y realizamos reparaciones para clientes de todo el <strong>País Vasco (Euskadi / Euskal Herria)</strong>, incluyendo Gipuzkoa, Bizkaia y Álava.
+              </p>
+            </div>
           </motion.div>
 
           <motion.div
