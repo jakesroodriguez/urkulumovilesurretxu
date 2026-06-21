@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X, Send, Sparkles, Phone, ArrowUpRight } from "lucide-react";
+import { MessageSquare, X, Send, Sparkles, Phone, ArrowUpRight, ShieldCheck, Zap } from "lucide-react";
 
 interface Message {
   id: string;
@@ -14,12 +14,13 @@ const WhatsAppFab = () => {
     {
       id: "welcome",
       sender: "bot",
-      text: "¡Hola! 👋 Soy el asistente virtual de Urkulu Móviles. Pregúntame sobre el precio de auriculares o móviles, nuestro horario, la ubicación de la tienda o sobre cualquier reparación.",
+      text: "¡Hola! 👋 Soy el asistente inteligente de Urkulu Móviles. \n\nPregúntame lo que quieras sobre:\n• 🔧 Reparación de pantalla y batería\n• 📱 Precios de iPhones, Samsung y otros móviles\n• 🎧 Cascos, altavoces y accesorios\n• ⏱️ Horario y dirección de la tienda",
     },
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(1);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -33,10 +34,10 @@ const WhatsAppFab = () => {
   }, [messages, isTyping]);
 
   useEffect(() => {
-    // Hide tooltip after 8 seconds
+    // Hide tooltip after 9 seconds
     const timer = setTimeout(() => {
       setShowTooltip(false);
-    }, 8000);
+    }, 9000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -76,6 +77,11 @@ const WhatsAppFab = () => {
         }
         return `Hoy ${todayName} abrimos de 9:30 a 13:30 por la mañana y de 16:30 a 20:30 por la tarde. ¿Tienes pensado venir hoy?`;
       }
+    }
+
+    // Generic screen repair price (user asks without specifying a phone model)
+    if (text.includes("pantalla") && (text.includes("cuesta") || text.includes("cuánto") || text.includes("cuanto") || text.includes("precio") || text.includes("reparar") || text.includes("cambiar")) && !text.match(/(iphone|samsung|xiaomi|redmi|huawei|pixel)/i)) {
+      return "El precio de reparar la pantalla depende mucho del modelo. Las reparaciones básicas en modelos sencillos van desde los **20€ a 40€**, mientras que en pantallas AMOLED o modelos recientes el costo varía. \n\nDime qué modelo de móvil tienes (ej. *iPhone 11*, *Samsung A54*) y te daré el precio exacto al instante.";
     }
 
     // 2. Specific Repair and Model Cost Estimation (e.g. "pantalla iphone 11")
@@ -230,10 +236,10 @@ const WhatsAppFab = () => {
   };
 
   const suggestions = [
-    { label: "⏱️ Horario y Dirección", text: "¿Cuál es vuestro horario y dónde está la tienda?" },
-    { label: "🎧 Precio de Auriculares", text: "¿Qué precio tienen vuestros cascos y auriculares?" },
-    { label: "📱 Precio de Móviles", text: "¿Qué precio tienen vuestros teléfonos móviles libres?" },
-    { label: "🔧 ¿Cuánto tarda una reparación?", text: "¿Cuánto tardáis en reparar una pantalla o batería rota?" },
+    { label: "⏱️ ¿Abrís hoy?", text: "¿A qué hora abrís hoy?" },
+    { label: "🔧 Pantalla Móvil", text: "¿Cuánto cuesta reparar la pantalla de un móvil?" },
+    { label: "📱 Precio iPhone 13", text: "¿Qué precio tiene el iPhone 13?" },
+    { label: "🎧 Precio Auriculares", text: "¿Qué precio tienen vuestros auriculares?" },
   ];
 
   return (
@@ -242,29 +248,37 @@ const WhatsAppFab = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.9 }}
+            initial={{ opacity: 0, y: 35, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.9 }}
+            exit={{ opacity: 0, y: 35, scale: 0.9 }}
             transition={{ type: "spring", damping: 25, stiffness: 250 }}
-            className="mb-4 flex flex-col h-[500px] w-[min(90vw,380px)] rounded-3xl border border-white/10 bg-ocean-deep/95 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
+            className="mb-4 flex flex-col h-[520px] w-[min(90vw,380px)] rounded-[2.5rem] border border-white/10 bg-ocean-deep/90 backdrop-blur-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] overflow-hidden"
+            style={{
+              boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.1), 0 25px 60px -15px rgba(0,0,0,0.6)"
+            }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-ocean-deep to-ocean-mid border-b border-white/10">
-              <div className="flex items-center gap-3">
-                <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/5 border border-white/10 text-primary-glow">
-                  <Sparkles size={18} className="animate-pulse" />
-                  <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-400 border border-ocean-deep" />
+            <div className="flex items-center justify-between p-5 bg-gradient-to-r from-ocean-deep/80 to-ocean-mid/80 border-b border-white/10">
+              <div className="flex items-center gap-3.5">
+                <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/5 border border-white/10 text-primary-glow shadow-inner">
+                  <Sparkles size={20} className="animate-pulse" />
+                  <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-400 border-2 border-ocean-deep animate-pulse" />
                 </div>
                 <div className="text-left font-body">
-                  <p className="text-sm font-bold text-white tracking-wide">Asistente AI</p>
-                  <p className="text-[10px] font-semibold text-emerald-400 flex items-center gap-1 uppercase tracking-wider">
-                    <span>En línea</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-bold text-white tracking-wide">Asistente AI</span>
+                    <span className="inline-flex items-center gap-0.5 rounded-md bg-primary-glow/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary-glow border border-primary-glow/20">
+                      V2.0
+                    </span>
+                  </div>
+                  <p className="text-[10px] font-semibold text-white/50 tracking-wider flex items-center gap-1 mt-0.5">
+                    <span>Soporte Técnico Interactivo</span>
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors border border-white/5"
+                className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 text-white/75 hover:bg-white/10 hover:text-white transition-all border border-white/5 hover:scale-105 active:scale-95"
                 aria-label="Cerrar chat"
               >
                 <X size={16} />
@@ -272,19 +286,19 @@ const WhatsAppFab = () => {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 flex flex-col bg-black/10">
+            <div className="flex-1 overflow-y-auto p-5 space-y-4.5 flex flex-col bg-black/15 scrollbar-thin">
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex flex-col max-w-[82%] ${
-                    msg.sender === "user" ? "self-end items-end" : "self-start items-start"
+                  className={`flex flex-col max-w-[85%] ${
+                    msg.sender === "user" ? "self-end items-end animate-slide-in-right" : "self-start items-start animate-slide-in-left"
                   }`}
                 >
                   <div
-                    className={`rounded-2xl px-4 py-2.5 text-xs leading-relaxed font-body ${
+                    className={`rounded-2xl px-4 py-3 text-xs leading-relaxed font-body shadow-sm ${
                       msg.sender === "user"
-                        ? "bg-primary text-white rounded-tr-none shadow-soft"
-                        : "bg-white/5 text-white/90 border border-white/5 rounded-tl-none"
+                        ? "bg-gradient-to-r from-primary to-primary-glow text-white rounded-tr-none"
+                        : "bg-white/5 border border-white/10 text-white/90 rounded-tl-none backdrop-blur-md"
                     }`}
                     style={{ whiteSpace: "pre-line" }}
                   >
@@ -295,11 +309,11 @@ const WhatsAppFab = () => {
 
               {/* Typing indicator */}
               {isTyping && (
-                <div className="self-start flex flex-col max-w-[80%] items-start">
-                  <div className="bg-white/5 border border-white/5 rounded-2xl rounded-tl-none px-4 py-3 flex gap-1 items-center">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: "300ms" }} />
+                <div className="self-start flex flex-col max-w-[80%] items-start animate-fade-in">
+                  <div className="bg-white/5 border border-white/10 rounded-2xl rounded-tl-none px-4 py-3.5 flex gap-1 items-center">
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-white/50 animate-bounce" style={{ animationDelay: "300ms" }} />
                   </div>
                 </div>
               )}
@@ -307,12 +321,12 @@ const WhatsAppFab = () => {
             </div>
 
             {/* Quick Suggestions Pills */}
-            <div className="p-3 bg-black/15 border-t border-white/5 flex flex-wrap gap-1.5 overflow-x-auto max-h-[110px]">
+            <div className="p-3.5 bg-black/20 border-t border-white/5 flex flex-wrap gap-2 overflow-x-auto max-h-[115px]">
               {suggestions.map((sug, i) => (
                 <button
                   key={i}
                   onClick={() => handleSend(sug.text)}
-                  className="rounded-full bg-white/5 border border-white/5 px-3 py-1.5 text-[10px] text-white/70 hover:bg-white/10 hover:text-white transition-all font-body tracking-wide"
+                  className="rounded-full bg-white/5 border border-white/5 hover:border-primary-glow/40 hover:bg-primary/10 px-3 py-1.5 text-[10px] text-white/70 hover:text-white transition-all font-body font-semibold tracking-wide"
                 >
                   {sug.label}
                 </button>
@@ -320,74 +334,86 @@ const WhatsAppFab = () => {
             </div>
 
             {/* Input & Action Footer */}
-            <div className="p-3 bg-black/20 border-t border-white/10 flex flex-col gap-2.5">
+            <div className="p-4 bg-gradient-to-t from-ocean-deep/90 to-ocean-deep/50 border-t border-white/10 flex flex-col gap-3">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   handleSend(inputValue);
                 }}
-                className="flex gap-2"
+                className="flex gap-2.5"
               >
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Escribe tu consulta aquí..."
-                  className="flex-1 rounded-xl bg-white/5 border border-white/5 px-4 py-2 text-xs text-white placeholder-white/40 focus:outline-none focus:border-primary-glow transition-all font-body"
+                  className="flex-1 rounded-xl bg-white/5 border border-white/5 px-4.5 py-2.5 text-xs text-white placeholder-white/35 focus:outline-none focus:border-primary-glow focus:bg-white/10 transition-all font-body shadow-inner"
                 />
                 <button
                   type="submit"
                   disabled={!inputValue.trim()}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white hover:bg-primary/90 disabled:opacity-40 disabled:hover:bg-primary transition-all shrink-0 shadow-[0_4px_12px_rgba(var(--primary),0.2)]"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-primary to-primary-glow text-white hover:scale-105 active:scale-95 disabled:opacity-40 disabled:hover:scale-100 disabled:from-primary disabled:to-primary transition-all shrink-0 shadow-[0_4px_12px_rgba(var(--primary),0.3)]"
                 >
                   <Send size={14} />
                 </button>
               </form>
 
               {/* Escape hatch button to WhatsApp */}
-              <a
+              <motion.a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2 text-xs font-bold text-white transition-all duration-300 hover:bg-[#1ebe5a] shadow-[0_4px_12px_rgba(37,211,102,0.2)]"
+                whileHover={{ y: -1.5, scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className="group flex items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 text-xs font-bold text-white transition-all duration-300 hover:bg-[#1ebe5a] shadow-[0_4px_15px_rgba(37,211,102,0.3)]"
               >
                 <Phone size={12} />
                 <span>Hablar con un Humano</span>
-                <ArrowUpRight size={12} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
+                <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </motion.a>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Floating Action Button */}
-      <div className="flex items-center gap-3">
+      {/* Floating Action Button Group */}
+      <div className="flex items-center gap-3.5">
         {/* Helper Tooltip */}
         <AnimatePresence>
           {showTooltip && !isOpen && (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              className="hidden md:flex items-center gap-1.5 rounded-full bg-foreground px-4 py-2.5 text-xs font-semibold text-background shadow-[0_10px_30px_rgba(0,0,0,0.35)] font-body select-none"
+              initial={{ opacity: 0, x: 20, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 20, scale: 0.95 }}
+              className="hidden md:flex items-center gap-2 rounded-full bg-foreground px-4.5 py-3 text-xs font-semibold text-background shadow-[0_10px_35px_rgba(0,0,0,0.4)] font-body select-none border border-white/5"
             >
-              <Sparkles size={12} className="text-primary-glow" />
+              <Zap size={12} className="text-primary-glow animate-pulse" />
               <span>¿Dudas? Chatea con la IA</span>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Trigger Bubble */}
+        {/* Trigger Bubble Button */}
         <button
           onClick={() => {
             setIsOpen(!isOpen);
             setShowTooltip(false);
+            setUnreadCount(0); // Clear unread badge on click
           }}
-          className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-glow transition-transform duration-300 hover:scale-105 active:scale-95 focus:outline-none"
+          className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-primary to-primary-glow text-white shadow-glow transition-transform duration-300 hover:scale-105 active:scale-95 focus:outline-none"
           aria-label="Abrir asistente virtual"
         >
-          {/* Pulsing ring animation */}
-          {!isOpen && <span className="absolute inset-0 animate-ping rounded-full bg-primary/30" />}
+          {/* Animated pulsing glow ring */}
+          {!isOpen && (
+            <span className="absolute inset-0 animate-ping rounded-full bg-primary-glow/40 opacity-70" />
+          )}
+
+          {/* Unread notification badge */}
+          {unreadCount > 0 && !isOpen && (
+            <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-ocean-deep shadow-md animate-bounce">
+              {unreadCount}
+            </span>
+          )}
           
           <AnimatePresence mode="wait">
             {isOpen ? (
