@@ -22,14 +22,17 @@ const HeroSection = () => {
         loading="eager"
       />
 
+      {/* Subtle vignette / glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--ocean-deep)/0.4)_100%)]" />
+
       {/* Overlay */}
       <div
         className="absolute inset-0"
         style={{ background: "var(--gradient-hero-overlay)" }}
       />
 
-      {/* Subtle vignette / glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--ocean-deep)/0.4)_100%)]" />
+      {/* Bottom fade-out gradient to blend into the next section */}
+      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
       {/* Content */}
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-white">
@@ -95,7 +98,7 @@ const HeroSection = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-white/60 transition-colors hover:text-white"
+        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-primary/70 transition-colors hover:text-primary"
         aria-label="Desplazarse hacia abajo"
       >
         <motion.div
