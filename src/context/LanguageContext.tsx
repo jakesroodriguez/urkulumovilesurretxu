@@ -13,9 +13,9 @@ export const translations = {
     
     // Hero
     hero_welcome: "Ongi etorri · Urretxu, Gipuzkoa",
-    hero_title: "Servicio técnico experto",
-    hero_title_highlight: "accesorios premium",
-    hero_desc: "Reparaciones express de pantallas y baterías en tiempo récord con componentes de calidad certificada. Descubre nuestra colección de fundas exclusivas y accesorios de alta gama en el centro de Urretxu.",
+    hero_title: "Urkulu",
+    hero_title_highlight: "Móviles",
+    hero_desc: "Servicio técnico experto y accesorios premium",
     hero_cta_whatsapp: "Escribir por WhatsApp",
     hero_cta_services: "Ver servicios",
     hero_scroll: "Desplazarse hacia abajo",
