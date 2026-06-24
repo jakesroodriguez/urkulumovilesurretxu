@@ -123,7 +123,7 @@ const Header = () => {
                     : "text-white/50 hover:text-white/80"
                 }`}
               >
-                ES
+                CAST
               </button>
               <button
                 onClick={() => setLanguage("eu")}
@@ -133,7 +133,7 @@ const Header = () => {
                     : "text-white/50 hover:text-white/80"
                 }`}
               >
-                EU
+                EUS
               </button>
             </motion.div>
 
