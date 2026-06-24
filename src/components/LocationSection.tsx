@@ -1,10 +1,12 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { MapPin, Clock, Phone } from "lucide-react";
+import { useLanguage, TranslationKey } from "@/context/LanguageContext";
 
-const hours = [
-  { day: "Lunes - Viernes", time: "9:30 - 13:30 / 16:30 - 20:30" },
-  { day: "Sábado", time: "10:00 - 14:00 / 16:00 - 20:00" },
-  { day: "Domingo", time: "Cerrado" },
+const hours: { dayKey: TranslationKey; timeKey?: TranslationKey; time?: string }[] = [
+  { dayKey: "day_weekday", time: "9:30 - 13:30 / 16:30 - 20:30" },
+  { dayKey: "day_saturday", time: "10:00 - 14:00 / 16:00 - 20:00" },
+  { dayKey: "day_sunday", timeKey: "time_closed" },
 ];
 
 const isOpenNow = () => {
@@ -37,38 +39,50 @@ const InfoRow = ({ icon: Icon, label, children }: { icon: typeof MapPin; label: 
 
 const LocationSection = () => {
   const open = isOpenNow();
+  const { t } = useLanguage();
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const headerY = useTransform(scrollYProgress, [0, 0.35], [60, 0]);
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
+
+  const leftX = useTransform(scrollYProgress, [0.05, 0.45], [-50, 0]);
+  const leftOpacity = useTransform(scrollYProgress, [0.05, 0.4], [0, 1]);
+
+  const rightX = useTransform(scrollYProgress, [0.1, 0.5], [50, 0]);
+  const rightOpacity = useTransform(scrollYProgress, [0.1, 0.45], [0, 1]);
 
   return (
-    <section id="ubicacion" className="bg-card py-24 md:py-32">
+    <section id="ubicacion" ref={sectionRef} className="bg-card py-24 md:py-32">
       <div className="container">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          style={{ y: headerY, opacity: headerOpacity }}
           className="mx-auto mb-16 max-w-2xl text-center"
         >
           <span className="text-xs font-medium uppercase tracking-[0.25em] text-primary font-body">
-            Encuéntranos
+            {t("location_sub")}
           </span>
           <h2 className="mt-4 text-4xl text-foreground md:text-5xl">
-            Nuestra tienda <span className="italic">en Urretxu</span>
+            {t("location_title")}
           </h2>
         </motion.div>
 
         <div className="grid gap-10 lg:grid-cols-2">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            style={{ x: leftX, opacity: leftOpacity }}
             className="flex flex-col gap-8"
           >
-            <InfoRow icon={MapPin} label="Dirección">
+            <InfoRow icon={MapPin} label={t("location_dir")}>
               Labeaga Kalea, 27, BAJO 003
               <br />
               <span className="text-muted-foreground">20700 Urretxu, Gipuzkoa</span>
             </InfoRow>
 
-            <InfoRow icon={Phone} label="Teléfono">
+            <InfoRow icon={Phone} label={t("location_phone")}>
               <a
                 href="tel:+34631946812"
                 className="text-primary transition-colors hover:text-primary/80"
@@ -77,7 +91,7 @@ const LocationSection = () => {
               </a>
             </InfoRow>
 
-            <InfoRow icon={Clock} label="Horario">
+            <InfoRow icon={Clock} label={t("location_hours")}>
               <div className="mb-3 flex items-center gap-2">
                 <span
                   className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
@@ -91,14 +105,16 @@ const LocationSection = () => {
                       open ? "bg-primary animate-pulse" : "bg-destructive"
                     }`}
                   />
-                  {open ? "Abierto ahora" : "Cerrado ahora"}
+                  {open ? t("location_open") : t("location_closed")}
                 </span>
               </div>
               <ul className="space-y-1.5 text-sm">
                 {hours.map((h) => (
-                  <li key={h.day} className="flex justify-between gap-6 border-b border-border/50 pb-1.5 last:border-0">
-                    <span className="text-muted-foreground">{h.day}</span>
-                    <span className="font-medium text-foreground">{h.time}</span>
+                  <li key={h.dayKey} className="flex justify-between gap-6 border-b border-border/50 pb-1.5 last:border-0">
+                    <span className="text-muted-foreground">{t(h.dayKey)}</span>
+                    <span className="font-medium text-foreground">
+                      {h.timeKey ? t(h.timeKey) : h.time}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -107,18 +123,16 @@ const LocationSection = () => {
             {/* SEO Service Area Box */}
             <div className="mt-4 rounded-2xl border border-border bg-card/45 p-5 backdrop-blur-sm shadow-elegant">
               <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-primary font-body">
-                Área de Servicio · Zerbitzu Eremua
+                {t("location_service_area_title")}
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed font-body">
-                Ofrecemos soporte técnico express en toda la comarca de <strong>Urola Garaia</strong> (Urretxu, Zumarraga, Legazpi). También atendemos consultas y realizamos reparaciones para clientes de todo el <strong>País Vasco (Euskadi / Euskal Herria)</strong>, incluyendo Gipuzkoa, Bizkaia y Álava.
+                {t("location_service_area_desc")}
               </p>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            style={{ x: rightX, opacity: rightOpacity }}
             className="overflow-hidden rounded-3xl border border-border shadow-elegant"
           >
             <iframe

@@ -1,6 +1,7 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import heroImg from "@/assets/hero-tienda.png";
+import { useLanguage } from "@/context/LanguageContext";
 
 const whatsappUrl =
   "https://wa.me/34631946812?text=Hola%20Urkulu%20M%C3%B3viles%2C%20me%20gustar%C3%ADa%20consultar%20sobre...";
@@ -12,10 +13,18 @@ const WhatsAppIcon = () => (
 );
 
 const HeroSection = () => {
+  const { t } = useLanguage();
+  const { scrollYProgress } = useScroll();
+
+  const yText = useTransform(scrollYProgress, [0, 0.4], [0, -100]);
+  const opacityText = useTransform(scrollYProgress, [0, 0.35], [1, 0]);
+  const scaleBg = useTransform(scrollYProgress, [0, 0.5], [1, 1.1]);
+
   return (
     <section className="relative h-[100svh] min-h-[640px] w-full overflow-hidden">
       {/* Background image */}
-      <img
+      <motion.img
+        style={{ scale: scaleBg }}
         src={heroImg}
         alt="Tienda Urkulu Móviles en Urretxu, Gipuzkoa"
         className="absolute inset-0 h-full w-full object-cover"
@@ -35,7 +44,10 @@ const HeroSection = () => {
       <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
       {/* Content */}
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-white">
+      <motion.div
+        style={{ y: yText, opacity: opacityText }}
+        className="relative z-10 flex h-full flex-col items-center justify-center pb-8 md:pb-16 px-6 text-center text-white"
+      >
         <motion.span
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -43,18 +55,17 @@ const HeroSection = () => {
           className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.25em] text-white/80 backdrop-blur-md font-body"
         >
           <span className="h-1.5 w-1.5 rounded-full bg-primary-glow" />
-          Ongi etorri · Urretxu, Gipuzkoa
+          {t("hero_welcome")}
         </motion.span>
 
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.15 }}
-          className="font-heading text-5xl leading-[1.05] tracking-tight md:text-7xl lg:text-[5.5rem] font-bold"
+          className="font-heading text-6xl leading-[1.05] tracking-tight md:text-8xl lg:text-[6.5rem] font-bold"
         >
-          Servicio técnico experto
-          <br />
-          <span className="italic text-gradient">& accesorios premium</span>
+          {t("hero_title")}{" "}
+          <span className="italic text-gradient">{t("hero_title_highlight")}</span>
         </motion.h1>
 
         <motion.p
@@ -63,7 +74,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-7 max-w-2xl text-base text-white/80 md:text-lg leading-relaxed font-body"
         >
-          Reparaciones express de pantallas y baterías en tiempo récord con componentes de calidad certificada. Descubre nuestra colección de fundas exclusivas y accesorios de alta gama en el centro de Urretxu.
+          {t("hero_desc")}
         </motion.p>
 
         {/* CTAs */}
@@ -80,16 +91,16 @@ const HeroSection = () => {
             className="group inline-flex items-center gap-3 rounded-full bg-[#25D366] px-7 py-4 text-base font-semibold text-white shadow-glow transition-all duration-300 hover:scale-[1.03] hover:bg-[#1ebe5a] font-body"
           >
             <WhatsAppIcon />
-            Escribir por WhatsApp
+            {t("hero_cta_whatsapp")}
           </a>
           <a
             href="#servicios"
             className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-7 py-4 text-base font-medium text-white backdrop-blur-md transition-all duration-300 hover:border-white/50 hover:bg-white/10 font-body"
           >
-            Ver servicios
+            {t("hero_cta_services")}
           </a>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Scroll indicator */}
       <motion.a
@@ -98,7 +109,7 @@ const HeroSection = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 1 }}
         className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-primary/70 transition-colors hover:text-primary"
-        aria-label="Desplazarse hacia abajo"
+        aria-label={t("hero_scroll")}
       >
         <motion.div
           animate={{ y: [0, 8, 0] }}

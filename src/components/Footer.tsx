@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { Phone, MapPin, Code2, Clock, ArrowUpRight, ArrowUp, Smartphone, Battery, Wrench, ChevronDown } from "lucide-react";
+import { useLanguage, TranslationKey } from "@/context/LanguageContext";
 
 const TikTokIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
@@ -10,50 +11,51 @@ const TikTokIcon = () => (
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { t } = useLanguage();
+  const footerRef = useRef<HTMLElement>(null);
 
-  const repairOptions = [
+  const { scrollYProgress } = useScroll({
+    target: footerRef,
+    offset: ["start end", "end end"],
+  });
+
+  const footerY = useTransform(scrollYProgress, [0, 1], [40, 0]);
+  const footerOpacity = useTransform(scrollYProgress, [0, 0.8], [0.5, 1]);
+
+  const repairOptions: { id: string; nameKey: TranslationKey; icon: typeof Smartphone; timeKey: TranslationKey; messageKey: TranslationKey }[] = [
     {
       id: "pantalla",
-      name: "Pantalla",
+      nameKey: "footer_repair_pantalla",
       icon: Smartphone,
-      time: "Listo en 1 hora",
-      message: "Hola! Me gustaría pedir presupuesto para cambiar la pantalla de mi móvil.",
+      timeKey: "footer_repair_pantalla_time",
+      messageKey: "footer_repair_pantalla_msg",
     },
     {
       id: "bateria",
-      name: "Batería",
+      nameKey: "footer_repair_bateria",
       icon: Battery,
-      time: "Listo en 45 min",
-      message: "Hola! Me gustaría pedir presupuesto para cambiar la batería de mi móvil.",
+      timeKey: "footer_repair_bateria_time",
+      messageKey: "footer_repair_bateria_msg",
     },
     {
       id: "otros",
-      name: "Otros",
+      nameKey: "footer_repair_otros",
       icon: Wrench,
-      time: "Diagnóstico gratis",
-      message: "Hola! Tengo un problema con mi móvil y me gustaría consultar una reparación.",
+      timeKey: "footer_repair_otros_time",
+      messageKey: "footer_repair_otros_msg",
     },
   ];
 
-  const faqs = [
-    {
-      q: "¿Cuánto tarda la reparación?",
-      a: "La mayoría de pantallas y baterías se cambian en 1 hora. Otras reparaciones se diagnostican gratis en el día.",
-    },
-    {
-      q: "¿Las reparaciones tienen garantía?",
-      a: "Sí, ofrecemos 3 meses de garantía en todas nuestras reparaciones de pantalla y componentes.",
-    },
-    {
-      q: "¿Necesito cita previa?",
-      a: "No es necesario. Puedes pasarte por la tienda en nuestro horario comercial y te atenderemos al momento.",
-    },
+  const faqs: { qKey: TranslationKey; aKey: TranslationKey }[] = [
+    { qKey: "footer_faq_1_q", aKey: "footer_faq_1_a" },
+    { qKey: "footer_faq_2_q", aKey: "footer_faq_2_a" },
+    { qKey: "footer_faq_3_q", aKey: "footer_faq_3_a" },
   ];
 
-  const payments = [
-    { id: "bizum", name: "📱 Bizum", desc: "Pago instantáneo y seguro a través de Bizum al número de la tienda." },
-    { id: "tarjeta", name: "💳 Tarjeta", desc: "Aceptamos todas las tarjetas de débito/crédito, Apple Pay y Google Pay." },
-    { id: "efectivo", name: "💵 Efectivo", desc: "Puedes realizar tu pago en metálico directamente en nuestro local comercial." },
+  const payments: { id: string; name: string; descKey: TranslationKey }[] = [
+    { id: "bizum", name: "📱 Bizum", descKey: "footer_pay_bizum" },
+    { id: "tarjeta", name: "💳 Tarjeta", descKey: "footer_pay_tarjeta" },
+    { id: "efectivo", name: "💵 Efectivo", descKey: "footer_pay_efectivo" },
   ];
 
   const [activeRepair, setActiveRepair] = useState(repairOptions[0]);
@@ -79,6 +81,7 @@ const Footer = () => {
   return (
     <footer
       id="contactar"
+      ref={footerRef}
       className="relative overflow-hidden text-white"
       style={{ background: "var(--gradient-ocean)" }}
     >
@@ -137,7 +140,10 @@ const Footer = () => {
         className="pointer-events-none absolute -bottom-40 right-0 h-80 w-[400px] rounded-full bg-primary-glow/10 blur-[100px]"
       />
 
-      <div className="container relative z-10 py-16 md:py-24">
+      <motion.div
+        style={{ y: footerY, opacity: footerOpacity }}
+        className="container relative z-10 py-16 md:py-24"
+      >
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Column 1: Brand Info, Live Status & Rating */}
           <div className="flex flex-col items-start">
@@ -145,7 +151,7 @@ const Footer = () => {
               Urkulu <span className="italic text-primary-glow">Móviles</span>
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-white/70 font-body">
-              Tu tienda de reparación y accesorios de móviles de confianza en Urretxu, Gipuzkoa. Calidad y rapidez garantizadas.
+              {t("footer_desc")}
             </p>
             
             {/* Live Status Badge */}
@@ -158,7 +164,7 @@ const Footer = () => {
                 }`}
               >
                 <span className={`h-1.5 w-1.5 rounded-full ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-red-500"}`} />
-                {isOpen ? "Abierto ahora" : "Cerrado ahora"}
+                {isOpen ? t("location_open") : t("location_closed")}
               </span>
             </div>
             
@@ -167,7 +173,7 @@ const Footer = () => {
               {!submittedRating ? (
                 <>
                   <span className="text-xs font-bold uppercase tracking-wider text-white/50 block mb-2 font-body">
-                    ¿Nos has visitado? Valóranos
+                    {t("footer_valora")}
                   </span>
                   <div className="flex items-center gap-2">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -202,7 +208,7 @@ const Footer = () => {
                   className="text-center py-1"
                 >
                   <p className="text-sm text-white/90 font-semibold font-body mb-2.5">
-                    ¡Gracias por tu valoración! ❤️
+                    {t("footer_thanks")}
                   </p>
                   <a
                     href="https://search.google.com/local/writereview?placeid=ChIJK3Zq8mO-SQ0R4qM1WbVw_w8"
@@ -210,7 +216,7 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white/10 px-3.5 py-2 text-xs font-bold text-white transition-all hover:bg-white/15 hover:scale-103 font-body border border-white/5 w-full"
                   >
-                    <span>Dejar reseña en Google</span>
+                    <span>{t("footer_review_google")}</span>
                     <ArrowUpRight size={12} className="text-primary-glow" />
                   </a>
                 </motion.div>
@@ -222,14 +228,14 @@ const Footer = () => {
           <div className="flex flex-col justify-between h-full min-h-[180px]">
             <div>
               <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-white/50 font-body">
-                Navegación
+                {t("footer_nav")}
               </h4>
               <nav className="flex flex-col gap-3.5 text-sm text-white/70 font-body">
                 {[
-                  { label: "Servicios", href: "#servicios" },
-                  { label: "Ubicación", href: "#ubicacion" },
-                  { label: "Opiniones", href: "#opiniones" },
-                  { label: "Productos", href: "#novedades" },
+                  { label: t("nav_servicios"), href: "#servicios" },
+                  { label: t("nav_ubicacion"), href: "#ubicacion" },
+                  { label: t("nav_opiniones"), href: "#opiniones" },
+                  { label: t( "nav_productos"), href: "#novedades" },
                 ].map((link) => (
                   <motion.a
                     key={link.href}
@@ -253,7 +259,7 @@ const Footer = () => {
               className="group flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 px-4.5 py-3 text-sm text-white/85 backdrop-blur-md transition-all duration-300 hover:border-[#ff0050]/40 hover:bg-[#ff0050]/10 hover:text-white font-body hover:shadow-[0_0_15px_rgba(255,0,80,0.15)] w-fit mt-6"
             >
               <TikTokIcon />
-              <span>Síguenos en TikTok</span>
+              <span>{t("footer_tiktok")}</span>
               <ArrowUpRight size={14} className="opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </motion.a>
           </div>
@@ -261,7 +267,7 @@ const Footer = () => {
           {/* Column 3: Interactive Repair Estimator */}
           <div>
             <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-white/50 font-body">
-              Presupuesto Rápido
+              {t("footer_budget")}
             </h4>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
               <div className="flex gap-2 mb-3">
@@ -278,7 +284,7 @@ const Footer = () => {
                       }`}
                     >
                       <Icon size={16} className={activeRepair.id === opt.id ? "text-primary-glow" : "text-white/60"} />
-                      <span>{opt.name}</span>
+                      <span>{t(opt.nameKey)}</span>
                     </button>
                   );
                 })}
@@ -286,17 +292,17 @@ const Footer = () => {
               <div className="rounded-xl bg-black/25 p-3.5 text-center border border-white/5">
                 <p className="text-xs text-white/80 font-body mb-2.5 flex items-center justify-center gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-primary-glow animate-pulse" />
-                  {activeRepair.time}
+                  {t(activeRepair.timeKey)}
                 </p>
                 <motion.a
-                  href={`https://wa.me/34631946812?text=${encodeURIComponent(activeRepair.message)}`}
+                  href={`https://wa.me/34631946812?text=${encodeURIComponent(t(activeRepair.messageKey))}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="group/btn w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 text-xs font-bold text-white transition-all duration-300 hover:bg-[#1ebe5a] shadow-[0_4px_12px_rgba(37,211,102,0.2)]"
                 >
-                  <span>Pedir Presupuesto</span>
+                  <span>{t("footer_pedir_presupuesto")}</span>
                   <ArrowUpRight size={14} className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                 </motion.a>
               </div>
@@ -306,7 +312,7 @@ const Footer = () => {
           {/* Column 4: Interactive FAQs */}
           <div>
             <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-white/50 font-body">
-              Preguntas Rápidas
+              {t("footer_faqs")}
             </h4>
             <div className="space-y-3">
               {faqs.map((faq, index) => {
@@ -317,7 +323,7 @@ const Footer = () => {
                       onClick={() => setExpandedFaq(isExpanded ? null : index)}
                       className="w-full flex items-center justify-between text-left text-xs font-semibold text-white/80 hover:text-white transition-colors p-3.5 font-body gap-2"
                     >
-                      <span>{faq.q}</span>
+                      <span>{t(faq.qKey)}</span>
                       <motion.div
                         animate={{ rotate: isExpanded ? 180 : 0 }}
                         transition={{ duration: 0.2 }}
@@ -335,7 +341,7 @@ const Footer = () => {
                           transition={{ duration: 0.25, ease: "easeInOut" }}
                         >
                           <div className="px-3.5 pb-3.5 pt-0 text-xs text-white/50 leading-relaxed font-body border-t border-white/5 bg-black/10">
-                            {faq.a}
+                            {t(faq.aKey)}
                           </div>
                         </motion.div>
                       )}
@@ -354,7 +360,7 @@ const Footer = () => {
               <Phone size={16} />
             </div>
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">Llámanos</p>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">{t("footer_call")}</p>
               <a href="tel:+34631946812" className="hover:text-white hover:underline transition-all font-semibold text-sm">
                 631 94 68 12
               </a>
@@ -365,7 +371,7 @@ const Footer = () => {
               <MapPin size={16} />
             </div>
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">Visítanos</p>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">{t("footer_visit")}</p>
               <a
                 href="https://maps.google.com/?q=Urkulu+Móviles+Labeaga+Kalea+27+Urretxu"
                 target="_blank"
@@ -381,7 +387,7 @@ const Footer = () => {
         {/* Interactive Payment Methods Selector */}
         <div className="mt-12 flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-black/20 p-5 text-center backdrop-blur-md">
           <div className="flex flex-wrap justify-center items-center gap-3.5 text-xs text-white/70 font-body">
-            <span className="self-center mr-1 font-semibold text-white/80">Métodos de pago aceptados:</span>
+            <span className="self-center mr-1 font-semibold text-white/80">{t("footer_pay_methods")}</span>
             {payments.map((p) => (
               <button
                 key={p.id}
@@ -406,7 +412,7 @@ const Footer = () => {
                 className="overflow-hidden"
               >
                 <p className="text-xs text-primary-glow font-medium font-body max-w-md mt-1">
-                  {payments.find((p) => p.id === selectedPay)?.desc}
+                  {t(payments.find((p) => p.id === selectedPay)?.descKey || "footer_desc")}
                 </p>
               </motion.div>
             )}
@@ -416,7 +422,7 @@ const Footer = () => {
         {/* Bottom Bar: Copyright & Designer */}
         <div className="mt-12 flex flex-col items-center justify-between gap-6 border-t border-white/10 pt-8 sm:flex-row text-center sm:text-left">
           <p className="text-xs text-white/40 font-body">
-            © {currentYear} Urkulu Móviles. Todos los derechos reservados.
+            © {currentYear} {t("footer_rights")}
           </p>
 
           <div className="flex items-center gap-4">
@@ -426,7 +432,7 @@ const Footer = () => {
               whileHover={{ y: -3, scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="group flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-400 backdrop-blur-md transition-all duration-300 hover:border-primary-glow/30 hover:bg-white/10 hover:text-white"
-              aria-label="Volver arriba"
+              aria-label={t("footer_back_to_top")}
             >
               <ArrowUp size={16} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
             </motion.button>
@@ -455,7 +461,7 @@ const Footer = () => {
             </a>
           </div>
         </div>
-      </div>
+      </motion.div>
     </footer>
   );
 };

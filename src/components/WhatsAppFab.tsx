@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X, Send, Sparkles, Phone, ArrowUpRight, ShieldCheck, Zap } from "lucide-react";
+import { MessageSquare, X, Send, Sparkles, Phone, ArrowUpRight, Zap } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Message {
   id: string;
@@ -9,14 +10,9 @@ interface Message {
 }
 
 const WhatsAppFab = () => {
+  const { t, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "welcome",
-      sender: "bot",
-      text: "¡Hola! 👋 Soy el asistente inteligente de Urkulu Móviles. \n\nPregúntame lo que quieras sobre:\n• 🔧 Reparación de pantalla y batería\n• 📱 Precios de iPhones, Samsung y otros móviles\n• 🎧 Cascos, altavoces y accesorios\n• ⏱️ Horario y dirección de la tienda",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showTooltip, setShowTooltip] = useState(true);
@@ -26,6 +22,17 @@ const WhatsAppFab = () => {
 
   const whatsappUrl =
     "https://wa.me/34631946812?text=Hola%20Urkulu%20M%C3%B3viles%2C%20tengo%20una%20consulta...";
+
+  // Reset or initialize messages when language changes
+  useEffect(() => {
+    setMessages([
+      {
+        id: "welcome",
+        sender: "bot",
+        text: t("chat_welcome"),
+      },
+    ]);
+  }, [language]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -45,35 +52,84 @@ const WhatsAppFab = () => {
     const text = input.toLowerCase();
 
     // Helper functions for dynamic details
-    const getTodayDayName = (dayNumber: number): string => {
+    const getTodayDayName = (dayNumber: number, lang: string): string => {
+      if (lang === "eu") {
+        const days = ["igandea", "astelehena", "asteartea", "asteazkena", "osteguna", "ostirala", "larunbata"];
+        return days[dayNumber];
+      }
       const days = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
       return days[dayNumber];
     };
 
-    // Easter Egg: Questions about Jakes Rodríguez García, Instagram, JRG Studio or "the most handsome person"
+    // Easter Egg: Questions about Jakes Rodríguez García
     const isJakes = text.includes("guapa") || text.includes("guapo") || text.includes("jakes") || text.includes("jrg") || text.includes("instagram") || text.includes("garcia") || text.includes("garcía") || text.includes("estudio") || text.includes("studio") || text.includes("creador") || text.includes("diseñador") || text.includes("diseño") || text.includes("construyó") || text.includes("creó") || text.includes("creo");
     
     if (isJakes) {
+      if (language === "eu") {
+        return "Munduko pertsonarik ederrena eta talentutsuena bilatzen... **Jakes Rodríguez García (@jakesroodriguez)**! 🚀\n\nJRG Studioko diseinatzailea, sustatzailea eta webgune zoragarri honen sortzailea da. Bere Instagrameko profilera birbideratuko zaitut 2 segundotan...";
+      }
       return "¡Buscando a la persona más guapa y talentosa del mundo... **Jakes Rodríguez García (@jakesroodriguez)**! 🚀\n\nÉl es el diseñador, desarrollador de JRG Studio y creador de esta increíble página web. Te estoy redirigiendo a su perfil de Instagram en una nueva pestaña en 2 segundos...";
     }
 
     // Basque Country (Euskera) language detection and responses
-    const isEuskera = text.match(/(kaixo|egun on|arratsalde on|ordutegia|ordutegi|ireki|itxi|non dago|non zaudete|pantaila|bateria|osagarriak|konponketa|konpondu|prezioa|zenbat balio|gora euskadi|gora eta|gora ta|eskerrik asko|agur|maite|polita)/i);
+    const isEuskera = language === "eu" || text.match(/(kaixo|egun on|arratsalde on|ordutegia|ordutegi|ireki|itxi|non dago|non zaudete|pantaila|bateria|osagarriak|konponketa|konpondu|prezioa|zenbat balio|gora euskadi|gora eta|gora ta|eskerrik asko|agur|maite|polita)/i);
     
     if (isEuskera) {
       if (text.includes("gora euskadi") || text.includes("gora eta") || text.includes("gora ta")) {
         return "Gora Euskadi! 🔴💚⚪ Urkulu Móviles Euskal Herriko eta Gipuzkoako telefono denda eta konponketa zentro onena da. Zer konpondu nahi duzu gaur?";
       }
-      if (text.includes("ordutegi") || text.includes("ordutegia") || text.includes("ireki") || text.includes("itxi") || text.includes("ordu")) {
-        return "Gure ordutegia:\n• Astelehenetik ostiralera: 9:30 - 13:30 eta 16:30 - 20:30\n• Larunbatetan: 10:00 - 14:00 eta 16:00 - 20:00\n• Igandeetan: Itxita gaude atsedenagatik.";
+      if (text.includes("ordutegi") || text.includes("ordutegia") || text.includes("ireki") || text.includes("itxi") || text.includes("ordu") || text.includes("gaur") || text.includes("bihar")) {
+        const now = new Date();
+        const todayDay = now.getDay();
+        
+        if (text.includes("bihar")) {
+          const tomorrowDay = (todayDay + 1) % 7;
+          const tomorrowName = getTodayDayName(tomorrowDay, "eu");
+          if (tomorrowDay === 0) {
+            return `Bihar ${tomorrowName} atsedenagatik itxita egongo gara. Astelehenean irekiko dugu berriz 9:30ean.`;
+          }
+          if (tomorrowDay === 6) {
+            return `Bihar larunbata 10:00etatik 14:00etara eta arratsaldez 16:00etatik 20:00etara egongo gara zabalik. Zure zain gaude!`;
+          }
+          return `Bihar ${tomorrowName} ohiko ordutegian irekiko dugu: 9:30etatik 13:30etara eta 16:30etatik 20:30etara.`;
+        }
+        
+        const todayName = getTodayDayName(todayDay, "eu");
+        if (todayDay === 0) {
+          return `Gaur ${todayName} denda itxita dago atsedenagatik. Bihar astelehena 9:30ean irekiko dugu.`;
+        }
+        if (todayDay === 6) {
+          return `Gaur larunbata 10:00etatik 14:00etara eta 16:00etatik 20:00etara gaude zabalik. Zatoz nahi duzunean!`;
+        }
+        return `Gaur ${todayName} 9:30etik 13:30era eta 16:30etik 20:30era irekitzen dugu. Gaur etortzeko asmoa duzu?`;
       }
-      if (text.includes("pantaila") || text.includes("bateria") || text.includes("konpondu") || text.includes("konponketa") || text.includes("arregla")) {
+      if (text.includes("pantaila") || text.includes("bateria") || text.includes("konpondu") || text.includes("konponketa") || text.includes("arreglar") || text.includes("cambiar")) {
+        // Model extraction regex
+        const phoneModelRegex = /(iphone|samsung|xiaomi|redmi|huawei|pixel)\s*(?:galaxy|note)?\s*([0-9a-zA-Z\s+]{2,12})/i;
+        const modelMatch = input.match(phoneModelRegex);
+        if (modelMatch) {
+          const brand = modelMatch[1].toLowerCase();
+          const modelDetail = modelMatch[2].trim();
+          const fullModelName = `${brand.charAt(0).toUpperCase() + brand.slice(1)} ${modelDetail}`;
+          let screenPrice = 79;
+          let batteryPrice = 39;
+          if (brand === "iphone") {
+            const num = parseInt(modelDetail);
+            if (num >= 14) { screenPrice = 189; batteryPrice = 79; }
+            else if (num >= 12) { screenPrice = 129; batteryPrice = 59; }
+            else if (num >= 10 || modelDetail.toLowerCase().includes("x")) { screenPrice = 89; batteryPrice = 49; }
+          }
+          if (text.includes("bateria")) {
+            return `Zure **${fullModelName}** telefonoarentzat, bateria aldatzea **${batteryPrice}€** inguru kostatuko litzateke (ordezko pieza berria, lana eta 3 hilabeteko bermea barne). 45 minututan egiten da. Txanda erreserbatu nahi duzu?`;
+          }
+          return `Zure **${fullModelName}** telefonoarentzat, pantaila aldatzea **${screenPrice}€** inguru kostatuko litzateke (kalitate premium ordezko pieza, lana eta 3 hilabeteko bermea barne). Ordubetean egiten da. Txanda erreserbatu nahi duzu?`;
+        }
         return "Pantailak ordubetean aldatzen ditugu eta bateriak 45 minututan, kalitate ziurtatuko ordezko piezekin eta 3 hilabeteko bermearekin. Esadazu zein mugikor modelo duzun eta prezioa esango dizut.";
       }
-      if (text.includes("non") || text.includes("helbidea") || text.includes("tienda") || text.includes("denda") || text.includes("urretxu")) {
+      if (text.includes("non") || text.includes("helbidea") || text.includes("tienda") || text.includes("denda") || text.includes("urretxu") || text.includes("nola iritsi")) {
         return "Urretxuko erdigunean gaude, Labeaga Kalea 27an (Gipuzkoa). Goian daukazu Google Maps mapa interaktiboa gure denda erraz aurkitzeko!";
       }
-      if (text.includes("prezio") || text.includes("prezioa") || text.includes("balio") || text.includes("osagarri") || text.includes("osagarriak")) {
+      if (text.includes("prezio") || text.includes("prezioa") || text.includes("balio") || text.includes("osagarri") || text.includes("osagarriak") || text.includes("cuesta") || text.includes("cuánto")) {
         return "Mugikor libreak ditugu 120€-tik aurrera eta gama altuko berregokituak (iPhone, Samsung) 399€-tik aurrera urtebeteko bermearekin. Zure mugikorra babesteko fundak eta kristalak ere baditugu.";
       }
       if (text.includes("eskerrik") || text.includes("eskerrik asko") || text.includes("agur") || text.includes("ondo") || text.includes("bale")) {
@@ -85,14 +141,14 @@ const WhatsAppFab = () => {
       return "Eskerrik asko idazteagatik! Informazio zehatzagoa jasotzeko edo gure taldearekin zuzenean hitz egiteko, egin klik beheko botoian WhatsApp bidez idazteko.";
     }
 
-    // 1. Dynamic Schedule matching ("hoy", "mañana", specific days)
+    // 1. Dynamic Schedule matching ("hoy", "mañana", specific days) in Spanish
     if (text.includes("horario") || text.includes("hora") || text.includes("abierto") || text.includes("abre") || text.includes("cierra") || text.includes("abren") || text.includes("sábado") || text.includes("domingo") || text.includes("hoy") || text.includes("mañana")) {
       const now = new Date();
       const todayDay = now.getDay();
 
       if (text.includes("mañana")) {
         const tomorrowDay = (todayDay + 1) % 7;
-        const tomorrowName = getTodayDayName(tomorrowDay);
+        const tomorrowName = getTodayDayName(tomorrowDay, "es");
         if (tomorrowDay === 0) {
           return `Mañana ${tomorrowName} cerramos por descanso semanal. Volveremos a abrir el lunes a las 9:30.`;
         }
@@ -103,7 +159,7 @@ const WhatsAppFab = () => {
       }
 
       if (text.includes("hoy") || text.includes("abrís") || text.includes("abris") || text.includes("abren") || text.includes("hora")) {
-        const todayName = getTodayDayName(todayDay);
+        const todayName = getTodayDayName(todayDay, "es");
         if (todayDay === 0) {
           return `Hoy ${todayName} la tienda está cerrada por descanso. Mañana lunes abriremos a las 9:30.`;
         }
@@ -114,15 +170,13 @@ const WhatsAppFab = () => {
       }
     }
 
-    // Generic screen repair price (user asks without specifying a phone model)
+    // Generic screen repair price
     if (text.includes("pantalla") && (text.includes("cuesta") || text.includes("cuánto") || text.includes("cuanto") || text.includes("precio") || text.includes("reparar") || text.includes("cambiar")) && !text.match(/(iphone|samsung|xiaomi|redmi|huawei|pixel)/i)) {
       return "El precio de reparar la pantalla depende mucho del modelo. Las reparaciones básicas en modelos sencillos van desde los **20€ a 40€**, mientras que en pantallas AMOLED o modelos recientes el costo varía. \n\nDime qué modelo de móvil tienes (ej. *iPhone 11*, *Samsung A54*) y te daré el precio exacto al instante.";
     }
 
     // 2. Specific Repair and Model Cost Estimation (e.g. "pantalla iphone 11")
     const isRepairQuery = text.includes("repara") || text.includes("pantalla") || text.includes("bateria") || text.includes("batería") || text.includes("arreglo") || text.includes("arreglar") || text.includes("cambiar") || text.includes("cambio") || text.includes("costo") || text.includes("cuesta") || text.includes("precio");
-    
-    // Model extraction regex (matches brand name + optional series + optional model number, e.g. "iphone 11", "iphone 13 pro", "samsung s23", "redmi note 12")
     const phoneModelRegex = /(iphone|samsung|xiaomi|redmi|huawei|pixel)\s*(?:galaxy|note)?\s*([0-9a-zA-Z\s+]{2,12})/i;
     const modelMatch = input.match(phoneModelRegex);
 
@@ -136,27 +190,9 @@ const WhatsAppFab = () => {
 
       if (brand === "iphone") {
         const num = parseInt(modelDetail);
-        if (num >= 14) {
-          screenPrice = 189;
-          batteryPrice = 79;
-        } else if (num >= 12) {
-          screenPrice = 129;
-          batteryPrice = 59;
-        } else if (num >= 10 || modelDetail.toLowerCase().includes("x") || modelDetail.toLowerCase().includes("xr") || modelDetail.toLowerCase().includes("xs")) {
-          screenPrice = 89;
-          batteryPrice = 49;
-        } else {
-          screenPrice = 69;
-          batteryPrice = 39;
-        }
-      } else if (brand === "samsung") {
-        if (modelDetail.toLowerCase().startsWith("s")) {
-          screenPrice = 149;
-          batteryPrice = 59;
-        } else {
-          screenPrice = 89;
-          batteryPrice = 45;
-        }
+        if (num >= 14) { screenPrice = 189; batteryPrice = 79; }
+        else if (num >= 12) { screenPrice = 129; batteryPrice = 59; }
+        else if (num >= 10 || modelDetail.toLowerCase().includes("x")) { screenPrice = 89; batteryPrice = 49; }
       }
 
       if (text.includes("bateria") || text.includes("batería")) {
@@ -166,7 +202,7 @@ const WhatsAppFab = () => {
       return `Para el **${fullModelName}**, cambiar la pantalla rota te costaría aproximadamente **${screenPrice}€** (incluyendo el repuesto de calidad premium, mano de obra y 3 meses de garantía). La reparación se realiza en 1 hora. ¿Quieres reservar cita?`;
     }
 
-    // 3. Specific Phone buying price query (e.g. "cuánto vale el iphone 13")
+    // 3. Specific Phone buying price query
     if ((text.includes("precio") || text.includes("vale") || text.includes("cuesta") || text.includes("comprar") || text.includes("cuanto") || text.includes("cuánto")) && modelMatch) {
       const brand = modelMatch[1].toLowerCase();
       const modelDetail = modelMatch[2].trim();
@@ -176,35 +212,13 @@ const WhatsAppFab = () => {
 
       if (brand === "iphone") {
         const num = parseInt(modelDetail);
-        if (num >= 15) {
-          priceEstimate = 790;
-        } else if (num === 14) {
-          priceEstimate = 620;
-        } else if (num === 13) {
-          priceEstimate = 490;
-        } else if (num === 12) {
-          priceEstimate = 380;
-        } else if (num === 11) {
-          priceEstimate = 299;
-        } else {
-          priceEstimate = 199;
-        }
-      } else if (brand === "samsung") {
-        const num = parseInt(modelDetail.replace(/\D/g, ""));
-        if (num >= 24) {
-          priceEstimate = 790;
-        } else if (num === 23) {
-          priceEstimate = 590;
-        } else if (num === 22) {
-          priceEstimate = 450;
-        } else if (num === 21) {
-          priceEstimate = 320;
-        } else {
-          priceEstimate = 220;
-        }
+        if (num >= 15) { priceEstimate = 790; }
+        else if (num === 14) { priceEstimate = 620; }
+        else if (num === 13) { priceEstimate = 490; }
+        else if (num === 12) { priceEstimate = 380; }
       }
 
-      return `El **${fullModelName}** reacondicionado en estado excelente (batería revisada al 100%, libre y con 1 año de garantía) lo tenemos actualmente a partir de **${priceEstimate}€**.\n\nComo referencia general de precios de móviles en nuestra tienda:\n• Modelos básicos libres: desde **120€**.\n• Modelos de gama alta reacondicionados: a partir de **399€**.\n\n¿Te gustaría consultar si nos queda stock de este modelo en algún color o capacidad?`;
+      return `El **${fullModelName}** reacondicionado en estado excelente (batería revisada al 100%, libre y con 1 año de garantía) lo tenemos actualmente a partir de **${priceEstimate}€**. ¿Te gustaría consultar si nos queda stock de este modelo?`;
     }
 
     // 4. Default categories fallbacks
@@ -212,31 +226,23 @@ const WhatsAppFab = () => {
       return "Disponemos de auriculares de alta fidelidad desde 29,99€ y modelos premium con cancelación de ruido por 149,99€. También tenemos altavoces bluetooth impermeables a partir de 45€. ¿Te gustaría ver fotos de los modelos por WhatsApp?";
     }
     
-    if (text.includes("precio") || text.includes("movil") || text.includes("moviles") || text.includes("móvil") || text.includes("móviles") || text.includes("telefono") || text.includes("teléfono") || text.includes("telefonos") || text.includes("teléfonos") || text.includes("comprar") || text.includes("vender")) {
+    if (text.includes("precio") || text.includes("movil") || text.includes("moviles") || text.includes("móvil") || text.includes("móviles") || text.includes("telefono") || text.includes("teléfono")) {
       return "Tenemos smartphones libres garantizados desde 120€ en modelos básicos, y teléfonos de gama alta reacondicionados (como iPhone y Samsung Galaxy) a partir de 399€ con 1 año de garantía. ¿Buscas alguna marca o presupuesto en especial?";
     }
 
-    if (text.includes("repara") || text.includes("pantalla") || text.includes("bateria") || text.includes("batería") || text.includes("tarda") || text.includes("arreglo") || text.includes("arreglar") || text.includes("tiempo") || text.includes("avería") || text.includes("roto") || text.includes("rota")) {
+    if (text.includes("repara") || text.includes("pantalla") || text.includes("bateria") || text.includes("batería") || text.includes("tarda") || text.includes("tiempo") || text.includes("avería")) {
       return "Reparamos pantallas en 1 hora y baterías en 45 minutos. Los diagnósticos de otras averías son totalmente gratuitos en el mismo día. Dime qué modelo tienes y te damos presupuesto sin compromiso.";
     }
 
-    if (text.includes("horario") || text.includes("hora") || text.includes("abierto") || text.includes("abre") || text.includes("cierra") || text.includes("horarios") || text.includes("sábado") || text.includes("domingo")) {
-      return "Nuestro horario comercial es de Lunes a Viernes de 9:30 a 13:30 y de 16:30 a 20:30, y Sábados de 10:00 a 14:00 y de 16:00 a 20:00. Los domingos cerramos por descanso.";
-    }
-
-    if (text.includes("donde") || text.includes("dónde") || text.includes("ubicacion") || text.includes("ubicación") || text.includes("dirección") || text.includes("direccion") || text.includes("tienda") || text.includes("urretxu") || text.includes("llegar") || text.includes("calle") || text.includes("mapa")) {
-      return "Estamos ubicados en Labeaga Kalea, 27, BAJO 003, 20700 Urretxu, Gipuzkoa. Tienes un mapa interactivo y el enlace directo a Google Maps justo arriba en el pie de página.";
-    }
-
-    if (text.includes("contacto") || text.includes("telefono") || text.includes("teléfono") || text.includes("número") || text.includes("numero") || text.includes("whatsapp") || text.includes("llamar") || text.includes("hablar")) {
+    if (text.includes("contacto") || text.includes("telefono") || text.includes("teléfono") || text.includes("número") || text.includes("llamar") || text.includes("hablar")) {
       return "Puedes llamarnos al 631 94 68 12. Si prefieres hablar directamente con una persona, haz clic en el botón '🟢 Hablar con un Humano' de este chat.";
     }
 
-    if (text.includes("hola") || text.includes("buenas") || text.includes("saludos") || text.includes("buenos días") || text.includes("buenas tardes")) {
+    if (text.includes("hola") || text.includes("buenas") || text.includes("buenos días") || text.includes("buenas tardes")) {
       return "¡Hola! Buenas. Soy el asistente virtual de la tienda. ¿En qué te puedo ayudar hoy? Pregúntame sobre reparaciones, precios de fundas y móviles, u horarios.";
     }
 
-    if (text.includes("gracias") || text.includes("ok") || text.includes("vale") || text.includes("perfecto") || text.includes("gracias!")) {
+    if (text.includes("gracias") || text.includes("ok") || text.includes("vale") || text.includes("perfecto")) {
       return "¡A ti! Si tienes cualquier otra duda, estaré encantado de resolverla. Si no, ¡que tengas un excelente día!";
     }
 
@@ -246,7 +252,6 @@ const WhatsAppFab = () => {
   const handleSend = (text: string) => {
     if (!text.trim()) return;
 
-    // Add user message
     const userMsg: Message = {
       id: Date.now().toString(),
       sender: "user",
@@ -256,7 +261,6 @@ const WhatsAppFab = () => {
     setInputValue("");
     setShowTooltip(false);
 
-    // Simulate bot typing
     setIsTyping(true);
     setTimeout(() => {
       setIsTyping(false);
@@ -268,7 +272,6 @@ const WhatsAppFab = () => {
       };
       setMessages((prev) => [...prev, botMsg]);
 
-      // Check if it's Jakes query to trigger Instagram redirect
       const lowerText = text.toLowerCase();
       const isJakesQuery = lowerText.includes("guapa") || lowerText.includes("guapo") || lowerText.includes("jakes") || lowerText.includes("jrg") || lowerText.includes("instagram") || lowerText.includes("garcia") || lowerText.includes("garcía") || lowerText.includes("estudio") || lowerText.includes("studio") || lowerText.includes("creador") || lowerText.includes("diseñador") || lowerText.includes("diseño") || lowerText.includes("construyó") || lowerText.includes("creó") || lowerText.includes("creo");
       
@@ -281,10 +284,10 @@ const WhatsAppFab = () => {
   };
 
   const suggestions = [
-    { label: "⏱️ ¿Abrís hoy?", text: "¿A qué hora abrís hoy?" },
-    { label: "🔧 Pantalla Móvil", text: "¿Cuánto cuesta reparar la pantalla de un móvil?" },
-    { label: "📱 Precio iPhone 13", text: "¿Qué precio tiene el iPhone 13?" },
-    { label: "🎧 Precio Auriculares", text: "¿Qué precio tienen vuestros auriculares?" },
+    { label: t("chat_sug_1"), text: t("chat_sug_1") },
+    { label: t("chat_sug_2"), text: t("chat_sug_2") },
+    { label: t("chat_sug_3"), text: t("chat_sug_3") },
+    { label: t("chat_sug_4"), text: t("chat_sug_4") },
   ];
 
   return (
@@ -391,7 +394,7 @@ const WhatsAppFab = () => {
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Escribe tu consulta aquí..."
+                  placeholder={t("chat_placeholder")}
                   className="flex-1 rounded-xl bg-white/5 border border-white/5 px-4.5 py-2.5 text-xs text-white placeholder-white/35 focus:outline-none focus:border-primary-glow focus:bg-white/10 transition-all font-body shadow-inner"
                 />
                 <button
@@ -413,7 +416,7 @@ const WhatsAppFab = () => {
                 className="group flex items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 text-xs font-bold text-white transition-all duration-300 hover:bg-[#1ebe5a] shadow-[0_4px_15px_rgba(37,211,102,0.3)]"
               >
                 <Phone size={12} />
-                <span>Hablar con un Humano</span>
+                <span>{t("chat_human")}</span>
                 <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </motion.a>
             </div>
@@ -433,7 +436,7 @@ const WhatsAppFab = () => {
               className="hidden md:flex items-center gap-2 rounded-full bg-foreground px-4.5 py-3 text-xs font-semibold text-background shadow-[0_10px_35px_rgba(0,0,0,0.4)] font-body select-none border border-white/5"
             >
               <Zap size={12} className="text-primary-glow animate-pulse" />
-              <span>¿Dudas? Chatea con la IA</span>
+              <span>{t("chat_tooltip")}</span>
             </motion.div>
           )}
         </AnimatePresence>

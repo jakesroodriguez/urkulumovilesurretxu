@@ -1,32 +1,46 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { useLanguage, TranslationKey } from "@/context/LanguageContext";
 
-const testimonials = [
+const testimonials: { name: string; textKey: TranslationKey; rating: number }[] = [
   {
     name: "Amaia L.",
-    text: "Sin duda, el mejor servicio técnico de toda la zona. Tenía la pantalla de mi iPhone rota, me la cambiaron en apenas 45 minutos y el resultado es impecable. Un trato de diez.",
+    textKey: "testimonial_1",
     rating: 5,
   },
   {
     name: "Mikel G.",
-    text: "Trato supercercano y profesional. Les llevé un móvil que no cargaba y lo solucionaron en el mismo día con total transparencia en el precio. Muy recomendables.",
+    textKey: "testimonial_2",
     rating: 5,
   },
   {
     name: "Itziar S.",
-    text: "Tienen una selección de fundas preciosa y de una calidad brutal que no se encuentra en ningún otro lado. Además, me colocaron un protector de hidrogel a medida en cinco minutos.",
+    textKey: "testimonial_3",
     rating: 5,
   },
   {
     name: "Jon A.",
-    text: "Atención al cliente excepcional. Cambié la batería de mi dispositivo y vuelve a rendir como el primer día. Explicaciones claras, rapidez y máxima confianza.",
+    textKey: "testimonial_4",
     rating: 5,
   },
 ];
 
 const TestimonialsSection = () => {
   const [current, setCurrent] = useState(0);
+  const { t } = useLanguage();
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const headerY = useTransform(scrollYProgress, [0, 0.35], [50, 0]);
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
+
+  const carouselScale = useTransform(scrollYProgress, [0.05, 0.45], [0.95, 1]);
+  const carouselOpacity = useTransform(scrollYProgress, [0.05, 0.4], [0, 1]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,16 +53,18 @@ const TestimonialsSection = () => {
   const next = () => setCurrent((c) => (c + 1) % testimonials.length);
 
   return (
-    <section id="opiniones" className="py-24 md:py-32">
+    <section id="opiniones" ref={sectionRef} className="py-24 md:py-32">
       <div className="container max-w-3xl text-center">
-        <span className="text-xs font-medium uppercase tracking-[0.25em] text-primary font-body">
-          Opiniones · 5.0 ★
-        </span>
-        <h2 className="mb-14 mt-4 text-4xl text-foreground md:text-5xl">
-          Lo que dicen <span className="italic">nuestros clientes</span>
-        </h2>
+        <motion.div style={{ y: headerY, opacity: headerOpacity }}>
+          <span className="text-xs font-medium uppercase tracking-[0.25em] text-primary font-body">
+            {t("testimonials_sub")}
+          </span>
+          <h2 className="mb-14 mt-4 text-4xl text-foreground md:text-5xl">
+            {t("testimonials_title")}
+          </h2>
+        </motion.div>
 
-        <div className="relative">
+        <motion.div style={{ scale: carouselScale, opacity: carouselOpacity }} className="relative">
           <AnimatePresence mode="wait">
             <motion.div
               key={current}
@@ -70,7 +86,7 @@ const TestimonialsSection = () => {
                   ))}
                 </div>
                 <blockquote className="mb-7 font-heading text-2xl leading-relaxed text-foreground md:text-3xl">
-                  "{testimonials[current].text}"
+                  "{t(testimonials[current].textKey)}"
                 </blockquote>
                 <p className="text-sm font-medium uppercase tracking-widest text-muted-foreground font-body">
                   — {testimonials[current].name}
@@ -107,7 +123,7 @@ const TestimonialsSection = () => {
               <ChevronRight size={18} />
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
