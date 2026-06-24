@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Code2 } from "lucide-react";
 import heroImg from "@/assets/hero-tienda.png";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -102,13 +102,43 @@ const HeroSection = () => {
         </motion.div>
       </motion.div>
 
+      {/* Designer Credit Button */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.8 }}
+        className="absolute bottom-24 left-1/2 z-10 -translate-x-1/2"
+      >
+        <a
+          href="https://www.instagram.com/jakesroodriguez"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex items-center gap-2.5 rounded-full border border-primary-glow/20 bg-white/5 px-4 py-2 text-white/80 backdrop-blur-md transition-all duration-500 shadow-[0_0_20px_hsl(var(--primary-glow)/0.35)] hover:border-primary-glow/50 hover:text-white hover:shadow-[0_0_25px_hsl(var(--primary-glow)/0.55)] hover:scale-[1.03] active:scale-95"
+        >
+          <div className="flex items-center justify-center rounded-full bg-white/10 p-1.5 transition-colors group-hover:bg-white/20">
+            <Code2
+              size={12}
+              className="transition-all duration-300 group-hover:rotate-[15deg] group-hover:scale-110"
+            />
+          </div>
+          <div className="flex flex-col items-start text-left font-body">
+            <span className="text-[8px] font-medium uppercase tracking-[0.2em] opacity-60 leading-none mb-0.5">
+              Designed & Built by
+            </span>
+            <span className="text-xs font-bold tracking-wider leading-none">
+              @jakesroodriguez
+            </span>
+          </div>
+        </a>
+      </motion.div>
+
       {/* Scroll indicator */}
       <motion.a
         href="#servicios"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-primary/70 transition-colors hover:text-primary"
+        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 text-primary/70 transition-colors hover:text-primary"
         aria-label={t("hero_scroll")}
       >
         <motion.div
