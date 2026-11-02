@@ -144,279 +144,290 @@ const Footer = () => {
         style={{ y: footerY, opacity: footerOpacity }}
         className="container relative z-10 py-16 md:py-24"
       >
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Column 1: Brand Info, Live Status & Rating */}
-          <div className="flex flex-col items-start">
-            <h3 className="font-heading text-2xl tracking-tight text-white">
-              Urkulu <span className="italic text-primary-glow">Móviles</span>
-            </h3>
-            <p className="mt-4 text-sm leading-relaxed text-white/70 font-body">
-              {t("footer_desc")}
-            </p>
-            
-            {/* Live Status Badge */}
-            <div className="mt-4 flex items-center gap-2">
-              <span
-                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold tracking-wider uppercase border backdrop-blur-md font-body ${
-                  isOpen
-                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                    : "bg-red-500/10 border-red-500/30 text-red-400"
-                }`}
-              >
-                <span className={`h-1.5 w-1.5 rounded-full ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-red-500"}`} />
-                {isOpen ? t("location_open") : t("location_closed")}
-              </span>
-            </div>
-            
-            {/* Interactive Rating Component */}
-            <div className="mt-5 rounded-2xl border border-white/5 bg-white/5 p-4 backdrop-blur-md w-full">
-              {!submittedRating ? (
-                <>
-                  <span className="text-xs font-bold uppercase tracking-wider text-white/50 block mb-2 font-body">
-                    {t("footer_valora")}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        onMouseEnter={() => setHoverRating(star)}
-                        onMouseLeave={() => setHoverRating(null)}
-                        onClick={() => {
-                          setRating(star);
-                          setSubmittedRating(true);
-                        }}
-                        className="text-xl transition-transform duration-200 hover:scale-125 focus:outline-none"
-                      >
-                        <span
-                          className={`${
-                            star <= (hoverRating ?? rating ?? 0)
-                              ? "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
-                              : "text-white/20"
-                          }`}
-                        >
-                          ★
-                        </span>
-                      </button>
-                    ))}
-                    {rating && <span className="text-sm text-white/60 ml-2 font-body">{rating}/5</span>}
-                  </div>
-                </>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-1"
+        <div className="grid gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {/* Column 1: Brand Info & Navigation */}
+          <div className="flex flex-col gap-10">
+            {/* Top: Brand Info, Live Status & Rating */}
+            <div className="flex flex-col items-start">
+              <h3 className="font-heading text-2xl tracking-tight text-white">
+                Urkulu <span className="italic text-primary-glow">Móviles</span>
+              </h3>
+              <p className="mt-4 text-sm leading-relaxed text-white/70 font-body">
+                {t("footer_desc")}
+              </p>
+              
+              {/* Live Status Badge */}
+              <div className="mt-4 flex items-center gap-2">
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold tracking-wider uppercase border backdrop-blur-md font-body ${
+                    isOpen
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                      : "bg-red-500/10 border-red-500/30 text-red-400"
+                  }`}
                 >
-                  <p className="text-sm text-white/90 font-semibold font-body mb-2.5">
-                    {t("footer_thanks")}
-                  </p>
-                  <a
-                    href="https://search.google.com/local/writereview?placeid=ChIJK3Zq8mO-SQ0R4qM1WbVw_w8"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white/10 px-3.5 py-2 text-xs font-bold text-white transition-all hover:bg-white/15 hover:scale-103 font-body border border-white/5 w-full"
+                  <span className={`h-1.5 w-1.5 rounded-full ${isOpen ? "bg-emerald-400 animate-pulse" : "bg-red-500"}`} />
+                  {isOpen ? t("location_open") : t("location_closed")}
+                </span>
+              </div>
+              
+              {/* Interactive Rating Component */}
+              <div className="mt-5 rounded-2xl border border-white/5 bg-white/5 p-4 backdrop-blur-md w-full">
+                {!submittedRating ? (
+                  <>
+                    <span className="text-xs font-bold uppercase tracking-wider text-white/50 block mb-2 font-body">
+                      {t("footer_valora")}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(null)}
+                          onClick={() => {
+                            setRating(star);
+                            setSubmittedRating(true);
+                          }}
+                          className="text-xl transition-transform duration-200 hover:scale-125 focus:outline-none"
+                        >
+                          <span
+                            className={`${
+                              star <= (hoverRating ?? rating ?? 0)
+                                ? "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+                                : "text-white/20"
+                            }`}
+                          >
+                            ★
+                          </span>
+                        </button>
+                      ))}
+                      {rating && <span className="text-sm text-white/60 ml-2 font-body">{rating}/5</span>}
+                    </div>
+                  </>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-1"
                   >
-                    <span>{t("footer_review_google")}</span>
-                    <ArrowUpRight size={12} className="text-primary-glow" />
-                  </a>
-                </motion.div>
-              )}
+                    <p className="text-sm text-white/90 font-semibold font-body mb-2.5">
+                      {t("footer_thanks")}
+                    </p>
+                    <a
+                      href="https://search.google.com/local/writereview?placeid=ChIJK3Zq8mO-SQ0R4qM1WbVw_w8"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white/10 px-3.5 py-2 text-xs font-bold text-white transition-all hover:bg-white/15 hover:scale-103 font-body border border-white/5 w-full"
+                    >
+                      <span>{t("footer_review_google")}</span>
+                      <ArrowUpRight size={12} className="text-primary-glow" />
+                    </a>
+                  </motion.div>
+                )}
+              </div>
+            </div>
+
+            {/* Bottom: Navigation Links & TikTok */}
+            <div className="flex flex-col justify-between min-h-[160px]">
+              <div>
+                <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-white/50 font-body">
+                  {t("footer_nav")}
+                </h4>
+                <nav className="flex flex-col gap-3.5 text-sm text-white/70 font-body">
+                  {[
+                    { label: t("nav_servicios"), href: "#servicios" },
+                    { label: t("nav_ubicacion"), href: "#ubicacion" },
+                    { label: t("nav_opiniones"), href: "#opiniones" },
+                    { label: t("nav_productos"), href: "#novedades" },
+                  ].map((link) => (
+                    <motion.a
+                      key={link.href}
+                      href={link.href}
+                      whileHover={{ x: 4, textShadow: "0 0 8px rgba(255,255,255,0.3)" }}
+                      className="group flex items-center gap-1 transition-all duration-300 hover:text-white w-fit"
+                    >
+                      <span>{link.label}</span>
+                      <ArrowUpRight size={12} className="opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    </motion.a>
+                  ))}
+                </nav>
+              </div>
+
+              <motion.a
+                href="https://www.tiktok.com/@urkulu.moviles2_urretxu"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ y: -3, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 px-4.5 py-3 text-sm text-white/85 backdrop-blur-md transition-all duration-300 hover:border-[#ff0050]/40 hover:bg-[#ff0050]/10 hover:text-white font-body hover:shadow-[0_0_15px_rgba(255,0,80,0.15)] w-fit mt-6"
+              >
+                <TikTokIcon />
+                <span>{t("footer_tiktok")}</span>
+                <ArrowUpRight size={14} className="opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </motion.a>
             </div>
           </div>
 
-          {/* Column 2: Navigation Links & Social */}
-          <div className="flex flex-col justify-between h-full min-h-[180px]">
+          {/* Column 2: Repair Estimator & Contact Info */}
+          <div className="flex flex-col gap-10">
+            {/* Top: Interactive Repair Estimator */}
             <div>
               <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-white/50 font-body">
-                {t("footer_nav")}
+                {t("footer_budget")}
               </h4>
-              <nav className="flex flex-col gap-3.5 text-sm text-white/70 font-body">
-                {[
-                  { label: t("nav_servicios"), href: "#servicios" },
-                  { label: t("nav_ubicacion"), href: "#ubicacion" },
-                  { label: t("nav_opiniones"), href: "#opiniones" },
-                  { label: t( "nav_productos"), href: "#novedades" },
-                ].map((link) => (
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
+                <div className="flex gap-1.5 mb-3">
+                  {repairOptions.map((opt) => {
+                    const Icon = opt.icon;
+                    return (
+                      <button
+                        key={opt.id}
+                        onClick={() => setActiveRepair(opt)}
+                        className={`flex-1 flex flex-col items-center gap-2 py-2 px-1 rounded-xl border text-[11px] md:text-xs font-semibold transition-all duration-300 font-body ${
+                          activeRepair.id === opt.id
+                            ? "bg-white/15 border-primary-glow text-white shadow-[0_0_15px_rgba(var(--primary-glow),0.1)] scale-105"
+                            : "bg-white/0 border-white/5 text-white/60 hover:bg-white/5 hover:text-white"
+                        }`}
+                      >
+                        <Icon size={16} className={activeRepair.id === opt.id ? "text-primary-glow" : "text-white/60"} />
+                        <span>{t(opt.nameKey)}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="rounded-xl bg-black/25 p-3.5 text-center border border-white/5">
+                  <p className="text-xs text-white/80 font-body mb-2.5 flex items-center justify-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary-glow animate-pulse" />
+                    {t(activeRepair.timeKey)}
+                  </p>
                   <motion.a
-                    key={link.href}
-                    href={link.href}
-                    whileHover={{ x: 4, textShadow: "0 0 8px rgba(255,255,255,0.3)" }}
-                    className="group flex items-center gap-1 transition-all duration-300 hover:text-white w-fit"
+                    href={`https://wa.me/34631946812?text=${encodeURIComponent(t(activeRepair.messageKey))}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="group/btn w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 text-xs font-bold text-white transition-all duration-300 hover:bg-[#1ebe5a] shadow-[0_4px_12px_rgba(37,211,102,0.2)]"
                   >
-                    <span>{link.label}</span>
-                    <ArrowUpRight size={12} className="opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <span>{t("footer_pedir_presupuesto")}</span>
+                    <ArrowUpRight size={14} className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                   </motion.a>
-                ))}
-              </nav>
+                </div>
+              </div>
             </div>
 
-            <motion.a
-              href="https://www.tiktok.com/@urkulu.moviles2_urretxu"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ y: -3, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="group flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/5 px-4.5 py-3 text-sm text-white/85 backdrop-blur-md transition-all duration-300 hover:border-[#ff0050]/40 hover:bg-[#ff0050]/10 hover:text-white font-body hover:shadow-[0_0_15px_rgba(255,0,80,0.15)] w-fit mt-6"
-            >
-              <TikTokIcon />
-              <span>{t("footer_tiktok")}</span>
-              <ArrowUpRight size={14} className="opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </motion.a>
+            {/* Bottom: Contact Info Bar (Llámanos & Visítanos) */}
+            <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md text-sm text-white/80 font-body">
+              <motion.div whileHover={{ y: -2 }} className="flex items-center gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-primary-glow">
+                  <Phone size={16} />
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">{t("footer_call")}</p>
+                  <a href="tel:+34631946812" className="hover:text-white hover:underline transition-all font-semibold text-sm">
+                    631 94 68 12
+                  </a>
+                </div>
+              </motion.div>
+              <motion.div whileHover={{ y: -2 }} className="flex items-start gap-4">
+                <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-primary-glow">
+                  <MapPin size={16} />
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">{t("footer_visit")}</p>
+                  <a
+                    href="https://maps.google.com/?q=Urkulu+Móviles+Labeaga+Kalea+27+Urretxu"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white transition-all font-semibold text-sm leading-snug"
+                  >
+                    Labeaga Kalea, 27, BAJO 003, 20700 Urretxu, Gipuzkoa
+                  </a>
+                </div>
+              </motion.div>
+            </div>
           </div>
 
-          {/* Column 3: Interactive Repair Estimator */}
-          <div>
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-white/50 font-body">
-              {t("footer_budget")}
-            </h4>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
-              <div className="flex gap-2 mb-3">
-                {repairOptions.map((opt) => {
-                  const Icon = opt.icon;
+          {/* Column 3: FAQs & Payment Methods */}
+          <div className="flex flex-col gap-10">
+            {/* Top: Interactive FAQs */}
+            <div>
+              <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-white/50 font-body">
+                {t("footer_faqs")}
+              </h4>
+              <div className="space-y-3">
+                {faqs.map((faq, index) => {
+                  const isExpanded = expandedFaq === index;
                   return (
-                    <button
-                      key={opt.id}
-                      onClick={() => setActiveRepair(opt)}
-                      className={`flex-1 flex flex-col items-center gap-2 py-2 px-1.5 rounded-xl border text-xs font-semibold transition-all duration-300 font-body ${
-                        activeRepair.id === opt.id
-                          ? "bg-white/15 border-primary-glow text-white shadow-[0_0_15px_rgba(var(--primary-glow),0.1)] scale-105"
-                          : "bg-white/0 border-white/5 text-white/60 hover:bg-white/5 hover:text-white"
-                      }`}
-                    >
-                      <Icon size={16} className={activeRepair.id === opt.id ? "text-primary-glow" : "text-white/60"} />
-                      <span>{t(opt.nameKey)}</span>
-                    </button>
+                    <div key={index} className="rounded-xl border border-white/5 bg-white/5 overflow-hidden backdrop-blur-md transition-all duration-300 hover:border-white/10">
+                      <button
+                        onClick={() => setExpandedFaq(isExpanded ? null : index)}
+                        className="w-full flex items-center justify-between text-left text-xs font-semibold text-white/80 hover:text-white transition-colors p-3.5 font-body gap-2"
+                      >
+                        <span>{t(faq.qKey)}</span>
+                        <motion.div
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="text-primary-glow shrink-0"
+                        >
+                          <ChevronDown size={14} />
+                        </motion.div>
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.25, ease: "easeInOut" }}
+                          >
+                            <div className="px-3.5 pb-3.5 pt-0 text-xs text-white/50 leading-relaxed font-body border-t border-white/5 bg-black/10">
+                              {t(faq.aKey)}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   );
                 })}
               </div>
-              <div className="rounded-xl bg-black/25 p-3.5 text-center border border-white/5">
-                <p className="text-xs text-white/80 font-body mb-2.5 flex items-center justify-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary-glow animate-pulse" />
-                  {t(activeRepair.timeKey)}
-                </p>
-                <motion.a
-                  href={`https://wa.me/34631946812?text=${encodeURIComponent(t(activeRepair.messageKey))}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="group/btn w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#25D366] py-2.5 text-xs font-bold text-white transition-all duration-300 hover:bg-[#1ebe5a] shadow-[0_4px_12px_rgba(37,211,102,0.2)]"
-                >
-                  <span>{t("footer_pedir_presupuesto")}</span>
-                  <ArrowUpRight size={14} className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                </motion.a>
-              </div>
             </div>
-          </div>
 
-          {/* Column 4: Interactive FAQs */}
-          <div>
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-wider text-white/50 font-body">
-              {t("footer_faqs")}
-            </h4>
-            <div className="space-y-3">
-              {faqs.map((faq, index) => {
-                const isExpanded = expandedFaq === index;
-                return (
-                  <div key={index} className="rounded-xl border border-white/5 bg-white/5 overflow-hidden backdrop-blur-md transition-all duration-300 hover:border-white/10">
+            {/* Bottom: Payment Methods Selector */}
+            <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-black/20 p-5 text-center backdrop-blur-md w-full">
+              <div className="flex flex-col items-center gap-3 text-xs text-white/70 font-body">
+                <span className="font-semibold text-white/80">{t("footer_pay_methods")}</span>
+                <div className="flex flex-wrap justify-center items-center gap-2">
+                  {payments.map((p) => (
                     <button
-                      onClick={() => setExpandedFaq(isExpanded ? null : index)}
-                      className="w-full flex items-center justify-between text-left text-xs font-semibold text-white/80 hover:text-white transition-colors p-3.5 font-body gap-2"
+                      key={p.id}
+                      onClick={() => setSelectedPay(selectedPay === p.id ? null : p.id)}
+                      className={`px-3 py-1.5 rounded-2xl border text-xs font-semibold transition-all duration-300 font-body ${
+                        selectedPay === p.id
+                          ? "bg-primary-glow/20 border-primary-glow text-white shadow-[0_0_15px_rgba(var(--primary-glow),0.1)] scale-105"
+                          : "bg-white/5 border-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                      }`}
                     >
-                      <span>{t(faq.qKey)}</span>
-                      <motion.div
-                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="text-primary-glow shrink-0"
-                      >
-                        <ChevronDown size={14} />
-                      </motion.div>
+                      {p.name}
                     </button>
-                    <AnimatePresence initial={false}>
-                      {isExpanded && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.25, ease: "easeInOut" }}
-                        >
-                          <div className="px-3.5 pb-3.5 pt-0 text-xs text-white/50 leading-relaxed font-body border-t border-white/5 bg-black/10">
-                            {t(faq.aKey)}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
+                  ))}
+                </div>
+              </div>
+              <AnimatePresence initial={false}>
+                {selectedPay && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <p className="text-xs text-primary-glow font-medium font-body mt-1">
+                      {t(payments.find((p) => p.id === selectedPay)?.descKey || "footer_desc")}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
-        </div>
-
-        {/* Contact info bar */}
-        <div className="mt-16 grid gap-6 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-md sm:grid-cols-2 text-sm text-white/80 font-body">
-          <motion.div whileHover={{ y: -2 }} className="flex items-center gap-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-primary-glow">
-              <Phone size={16} />
-            </div>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">{t("footer_call")}</p>
-              <a href="tel:+34631946812" className="hover:text-white hover:underline transition-all font-semibold text-sm">
-                631 94 68 12
-              </a>
-            </div>
-          </motion.div>
-          <motion.div whileHover={{ y: -2 }} className="flex items-start gap-4">
-            <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-primary-glow">
-              <MapPin size={16} />
-            </div>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-white/40">{t("footer_visit")}</p>
-              <a
-                href="https://maps.google.com/?q=Urkulu+Móviles+Labeaga+Kalea+27+Urretxu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-all font-semibold text-sm leading-snug"
-              >
-                Labeaga Kalea, 27, BAJO 003, 20700 Urretxu, Gipuzkoa
-              </a>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Interactive Payment Methods Selector */}
-        <div className="mt-12 flex flex-col items-center gap-4 rounded-2xl border border-white/10 bg-black/20 p-5 text-center backdrop-blur-md">
-          <div className="flex flex-wrap justify-center items-center gap-3.5 text-xs text-white/70 font-body">
-            <span className="self-center mr-1 font-semibold text-white/80">{t("footer_pay_methods")}</span>
-            {payments.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setSelectedPay(selectedPay === p.id ? null : p.id)}
-                className={`px-4.5 py-2 rounded-2xl border text-xs font-semibold transition-all duration-300 font-body ${
-                  selectedPay === p.id
-                    ? "bg-primary-glow/20 border-primary-glow text-white shadow-[0_0_15px_rgba(var(--primary-glow),0.1)] scale-105"
-                    : "bg-white/5 border-white/5 text-white/70 hover:bg-white/10 hover:text-white"
-                }`}
-              >
-                {p.name}
-              </button>
-            ))}
-          </div>
-          <AnimatePresence initial={false}>
-            {selectedPay && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
-              >
-                <p className="text-xs text-primary-glow font-medium font-body max-w-md mt-1">
-                  {t(payments.find((p) => p.id === selectedPay)?.descKey || "footer_desc")}
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* Bottom Bar: Copyright & Designer */}
@@ -439,9 +450,10 @@ const Footer = () => {
 
             {/* Original Designer Credit Card */}
             <a
-              href="https://www.instagram.com/jakesroodriguez"
+              href="https://www.jrgagency.eus/desarrollo-web"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
+              title="Ingeniería y desarrollo web a medida en Gipuzkoa por jrgagency.eus"
               className="group inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-zinc-400 backdrop-blur-md transition-all duration-500 hover:bg-white/10 hover:text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95"
             >
               <div className="flex items-center justify-center rounded-full bg-white/10 p-2 transition-colors group-hover:bg-white/20">
@@ -452,10 +464,10 @@ const Footer = () => {
               </div>
               <div className="flex flex-col items-start text-left font-body">
                 <span className="mb-0.5 text-[9px] font-medium uppercase tracking-[0.2em] opacity-60">
-                  Designed & Built by
+                  Ingeniería y desarrollo web por
                 </span>
                 <span className="text-sm font-bold tracking-wider">
-                  @jakesroodriguez
+                  jrgagency.eus
                 </span>
               </div>
             </a>
